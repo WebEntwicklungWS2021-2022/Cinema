@@ -7,6 +7,6 @@ npm run start
 # To access the website, open the following link after starting the server
 http://localhost:8080
 
-#Note 
+# Note 
 when Less file or Javascript file is edited, you need to run the following command before starting the server:
 # npm run build
