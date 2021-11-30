@@ -1,5 +1,5 @@
 # Cinema
-To install the project
+# To install the project
 1. npm install (only for the first time when you download the project)
 2. npm run build
 # To start the server
