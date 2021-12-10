@@ -7,9 +7,11 @@
     "test": "\"echo No test specified\"",
     "debug": "bash ./debug.sh",
     "build": "bash ./build.sh",
-    "lint": "./node_modules/semistandard/bin/cmd.js server.js client/src/**/*.js",
-    "clean": "rm -f client/src/build/*",
-    "start": "node ./server.js"
+    "lint": "semistandard",
+    "lint_fix": "semistandard --fix",
+    "clean": "rm -f build/*",
+    "start": "node src/server.js",
+    "prestart": "bash ./build.sh" 
   },
   "repository": {
     "type": "git",
