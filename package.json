@@ -10,8 +10,8 @@
     "lint": "semistandard",
     "lint_fix": "semistandard --fix",
     "clean": "rm -f build/*",
-    "start": "node src/server.js",
-    "prestart": "bash ./build.sh" 
+    "preclean": "rm -rf node_modules",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",

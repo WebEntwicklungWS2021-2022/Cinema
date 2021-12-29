@@ -3,6 +3,10 @@ const path = require('path');
 const express = require('express');
 const server = express();
 
+const hostname = 'localhost';
+
+let port = 8080;
+
 // Static Files
 server.use(express.static('build'));
 
@@ -18,4 +22,26 @@ server.get('/index_admin', (request, response) => {
   response.sendFile(path.join(__dirname, './views/admin/index_admin.html'));
 });
 
-server.listen(8080);
+server.get('/reservation', (request, response) => {
+  response.sendFile(path.join(__dirname, './views/user/reservation.html'));
+});
+
+server.get('/create_presentation', (request, response) => {
+  response.sendFile(path.join(__dirname, './views/admin/create_presentation.html'));
+});
+
+server.get('/create_room', (request, response) => {
+  response.sendFile(path.join(__dirname, './views/admin/create_room.html'));
+});
+
+if (process.argv[2] !== undefined) {
+  port = process.argv[2];
+}
+
+try {
+  server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+  });
+} catch (err) {
+  console.log('invalid port');
+}

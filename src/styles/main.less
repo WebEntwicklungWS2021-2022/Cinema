@@ -1,70 +1,173 @@
+html{
+    height: 100%;
+}
 
 
-//Allgemeines Design
 body{
-    width: 70%;
+    margin: 0;
+    background: rgba(49, 48, 48, 0.876);
+    height: 100%
+}
+
+header{
+    background: rgba(49, 48, 48, 0.876);
+}
+
+
+.nav-container{
+    width: 80%;
     margin: 0 auto;
 }
 
-.header{
-    overflow: hidden;
-    background-color: #f1f1f1;
-    padding: 20px 10px;
+.nav-container::after{
+    content: '';
+    display: table;
+    clear: both;
 }
 
-
-
-.navbar{
+.logo{
     float: left;
 }
 
-.navbar a{
+.nav-links{
+    float: left; 
+}
 
-    float: right;
+.nav-links ul{
+    margin: 0;
+    padding: 0; 
+    list-style: none;
+    padding-left: 25px;
+}
+
+.nav-links li{
+    display: inline-block;
+    margin: 0 25px;
+    padding-top: 25px;
+}
+
+.nav-links a{
     color: black;
-    text-align: center;
-    padding: 12px;
     text-decoration: none;
-    font-size: 18px;
-    line-height: 25px;
-    border-radius: 4px;
-
-
 }
 
-
-
-//Selection Page
-body.selection_page{
-
-    height: fit-content;
-    width: fit-content;
-    margin: auto;
+.nav-links :hover{
+    color: dimgray;
 }
 
-.selection{
+.banner{
+    height: 200px;
+}
 
-    height: 100%;
-    width: 50em;
-    float: left;
+.banner h1{
+    padding: 75px;
     text-align: center;
+}
 
-    .selection_header{
-        overflow: hidden;
-        background-color: #f1f1f1;
-        padding: 20px 10px;
-        height: fit-content;
-    }
 
-    .user{
-        height: 10em;
-        width: 50%;
-        background-color: aqua;
-    }
+.content-container{
+    background-color: gray;
+}
 
-    .admin{
-        height: 10em;
-        width: 50%;
-        background-color: red;
-    }  
+.card-container{
+    display: flex;
+    justify-content: center;
+}
+
+.card{
+    background-color: white;
+    width: 200px;
+    height: 400px;
+    margin: 20px;  
+}
+
+.card-image{
+    background-color: tomato;
+    height: 200px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+#Username {
+	border: none;
+	border-bottom: 1px solid;
+}
+.screen {
+	width: 100%;
+	height: 20px;
+	background: #4388cc;
+	color: #fff;
+	line-height: 20px;
+	font-size: 15px;
+}
+.smallBox {
+	&::before {
+		content: ".";
+		width: 15px;
+		height: 15px;
+		float: left;
+		margin-right: 10px;
+	}
+}
+.greenBox {
+	&::before {
+		content: "";
+		background: Green;
+	}
+}
+.redBox {
+	&::before {
+		content: "";
+		background: Red;
+	}
+}
+.emptyBox {
+	&::before {
+		content: "";
+		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+		background-color: #ccc;
+	}
+}
+.seats {
+	border: 1px solid red;
+	background: yellow;
+}
+.seatGap {
+	width: 40px;
+}
+.seatVGap {
+	height: 40px;
+}
+table {
+	text-align: center;
+}
+textarea {
+	border: none;
+	background: transparent;
+}
+input[type=checkbox] {
+	width: 0px;
+	margin-right: 18px;
+	&:before {
+		content: "";
+		width: 15px;
+		height: 15px;
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+		background-color: #ccc;
+	}
+	&:checked {
+		&:before {
+			background-color: Green;
+			font-size: 15px;
+		}
+	}
 }
