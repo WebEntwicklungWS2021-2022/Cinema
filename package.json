@@ -8,10 +8,11 @@
     "debug": "bash ./debug.sh",
     "build": "bash ./build.sh",
     "lint": "semistandard",
-    "lint_fix": "semistandard --fix",
+    "fix": "semistandard --fix",
     "clean": "rm -f build/*",
     "preclean": "rm -rf node_modules",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "prestart": "npm run build"
   },
   "repository": {
     "type": "git",
