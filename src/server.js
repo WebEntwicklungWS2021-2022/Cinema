@@ -3,6 +3,8 @@ const path = require('path');
 const express = require('express');
 const server = express();
 
+const db = require('./server/database.js');
+
 const hostname = 'localhost';
 
 let port = 8080;
@@ -45,3 +47,33 @@ try {
 } catch (err) {
   console.log('invalid port');
 }
+
+server.get('/api/users', (req, res, next) => {
+  const sql = 'select * from Reservierung';
+  const params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
+server.get('/api/user', (req, res, next) => {
+  const sql = 'select * from Vorstellung';
+  const params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
