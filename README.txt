@@ -1,4 +1,4 @@
 erstmaliges Ausführen:
     npm install
-    npm build
-    npm start <port optional>
+    npm run build
+    npm run start <port optional>
