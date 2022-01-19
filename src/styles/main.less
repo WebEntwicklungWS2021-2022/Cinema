@@ -5,32 +5,33 @@ html{
 
 body{
     margin: 0;
-    background: rgba(49, 48, 48, 0.876);
-    height: 100%
+    background: rgba(22, 22, 22, 0.876);
+    height: 100vh;
+	display: flex;
+	flex-direction: column;
+	overflow-y: hidden;
 }
 
 header{
-    background: rgba(49, 48, 48, 0.876);
+    background: rgba(31, 30, 30, 0.876);
+	flex-grow: 0;
 }
-
 
 .nav-container{
-    width: 80%;
-    margin: 0 auto;
+    padding: 0 0 0 50px;
+	display: flex;
 }
 
-.nav-container::after{
-    content: '';
-    display: table;
-    clear: both;
-}
 
 .logo{
-    float: left;
-}
+    
+	padding: 0 0 0 10%;
 
-.nav-links{
-    float: left; 
+	& img{
+		height: 60px;
+		
+	}
+		
 }
 
 .nav-links ul{
@@ -47,52 +48,135 @@ header{
 }
 
 .nav-links a{
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
 .nav-links :hover{
-    color: dimgray;
+    color: red;
 }
-
-.banner{
-    height: 200px;
-}
-
-.banner h1{
-    padding: 75px;
-    text-align: center;
-}
-
 
 .content-container{
-    background-color: gray;
+	
+    background-color: rgba(10, 10, 10, 0.767);
+	flex-grow: 1;
 }
 
+
+
+
+
+// card design
 .card-container{
     display: flex;
+	gap: 30px;
     justify-content: center;
+	flex-wrap: wrap;
+	padding: 30px;
+	
 }
 
 .card{
-    background-color: white;
-    width: 200px;
-    height: 400px;
-    margin: 20px;  
+    display: grid;
+	grid-template-columns: 220px;
+	grid-template-rows: 300px  40px;
+	grid-template-areas: "image" "title"; 
+	text-align: center;
+	border-radius: 18px;
+	margin-top: 30px;
+	transition: 0.5s ease;
+	position: relative;
+	opacity: 1;
 }
+
+.card-overlay {
+	transition: .5s ease;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	opacity: 0;
+	text-align: center;
+
+	& .a{
+		text-decoration: none;
+		display:block;
+	}
+}
+
+.card-overlay-text{
+	
+	color: white;
+	font-size: 30px;
+	padding: 16px 32px;
+	opacity: 1;
+	border: 5px solid rgb(134, 15, 11);
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+
+
 
 .card-image{
+	grid-area: "image";
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
     background-color: tomato;
-    height: 200px;
-    width: 100%;
-    margin-bottom: 10px;
+	background: url("pictures/the_room.png");
+	background-size: cover;
+}
+
+.card-image.card2 {
+	background: url("pictures/starwars.png");
+	background-size: cover;
+}
+
+.card-image.card3 {
+	background: url("pictures/two_brothers.png");
+	background-size: cover;
+}
+
+.card-image.card4 {
+	background: url("pictures/sharknado.png");
+	background-size: cover;
+}
+
+
+.card-title {
+	grid-area: "reservation";
+	display: grid;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	background: #23262c;
+
+	& h2{
+		margin: auto 0;
+		color: white;
+		font-size: 1em;
+	}
+  }
+
+.card:hover {
+	transform: scale(1.15);
+	/* transform: rotate3d(1, 1, 0.1, 45deg); */
+	box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+
+	& .card-image{
+		filter: brightness(30%);
+	}
+
+	& .card-overlay{
+		opacity: 1;
+	}
 }
 
 
 
 
-
-
+// seat designs
 
 #Username {
 	border: none;
