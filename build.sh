@@ -1,4 +1,4 @@
-npm run lint
+#npm run lint
 
 
 if [ $? -eq 0 ]; then

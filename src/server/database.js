@@ -21,57 +21,76 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
     throw err;
   } else {
     console.log('Connected to the SQLite database.');
-    db.run(`CREATE TABLE "Kinosaal" (
-        "saalId" INTEGER,
+    db.run(`CREATE TABLE "rooms" (
+        "roomId" INTEGER,
         "name" TEXT,
-        "anzahlSitzreihen" INTEGER,
-        "AnzahlSitzeProSitzreihe" INTEGER,
-        PRIMARY KEY("saalId" AUTOINCREMENT)
-    )
-    `,
-    (err) => {
-      if (err) {
-        // Table already created
-      } else {
-        // Table just created, creating some rows
-        const insert = 'INSERT INTO Kinosaal (name, anzahlSitzreihen, AnzahlSitzeProSitzreihe) VALUES (?,?,?)';
-        db.run(insert, ['admin', '1', '5']);
-        db.run(insert, ['user', '2', '4']);
-      }
-    });
-    db.run(`CREATE TABLE "Vorstellung" (
-        "vorstellungsId" INTEGER,
-        "datumUhrzeit" TIMESTAMP,
-        "filmsname" TEXT NOT NULL,
-        "saalId" INTEGER,
-        "posterName" TEXT NOT NULL,
-        PRIMARY KEY("vorstellungsId" AUTOINCREMENT),
-        FOREIGN KEY("saalId") REFERENCES "kinosaal"("saalId")
+        "rows" INTEGER,
+        "seatsPerRow" INTEGER,
+        PRIMARY KEY("roomId" AUTOINCREMENT)
     )`,
     (err) => {
       if (err) {
         // Table already created
       } else {
         // Table just created, creating some rows
-        const insert = 'INSERT INTO Vorstellung (datumUhrzeit, filmsname, saalId, posterName) VALUES (?,?,?,?)';
-        db.run(insert, ['2022-01-15 17:30', 'abc1', '2', 'hey']);
+        const insert = 'INSERT INTO rooms (name, rows, seatsPerRow) VALUES (?,?,?)';
+        db.run(insert, ['room 1', '1', '5']);
+        db.run(insert, ['room 2', '2', '4']);
       }
     });
-    db.run(`CREATE TABLE "Reservierung" (
-        "reservierungsId" INTEGER,
-        "vorstellungsId" INTEGER,
-        "reservierteSitze" INTEGER,
-        "kunde" TEXT,
-        PRIMARY KEY("reservierungsId" AUTOINCREMENT),
-        FOREIGN KEY("vorstellungsId") REFERENCES "vorstellung"("vorstellungsId")
+    db.run(`CREATE TABLE "presentations" (
+        "presentationId" INTEGER,
+        "timestamp" TIMESTAMP,
+        "movieId" INTEGER,
+        "roomId" INTEGER,
+        PRIMARY KEY("presentationId" AUTOINCREMENT),
+        FOREIGN KEY("roomId") REFERENCES "rooms"("roomId")
     )`,
     (err) => {
       if (err) {
         // Table already created
       } else {
         // Table just created, creating some rows
-        const insert = 'INSERT INTO Reservierung (vorstellungsId, reservierteSitze, kunde) VALUES (?,?,?)';
+        const insert = 'INSERT INTO presentations (timestamp, movieId, roomId) VALUES (?,?,?)';
+        db.run(insert, ['2022-01-15 17:30', '1', '2']);
+      }
+    });
+
+    db.run(`CREATE TABLE "reservations" (
+        "reservationId" INTEGER,
+        "presentationId" INTEGER,
+        "seats" INTEGER,
+        "customer" TEXT,
+        PRIMARY KEY("reservationId" AUTOINCREMENT),
+        FOREIGN KEY("presentationId") REFERENCES "presentations"("presentationId")
+    )`,
+    (err) => {
+      if (err) {
+        // Table already created
+      } else {
+        // Table just created, creating some rows
+        const insert = 'INSERT INTO reservations (presentationId, seats, customer) VALUES (?,?,?)';
         db.run(insert, ['1', '1', 'Joud']);
+      }
+    });
+
+    db.run(`CREATE TABLE "movies" (
+      "movieId" INTEGER,
+      "name" TEXT,
+      "posterName" TEXT,
+      PRIMARY KEY("movieId" AUTOINCREMENT)
+    )`,
+    (err) => {
+      if (err) {
+      // Table already created
+      } else {
+      // Table just created, creating some rows
+        const insert = 'INSERT INTO movies (name, posterName) VALUES (?,?)';
+        db.run(insert, ['Sharknado', 'sharknado.png']);
+        db.run(insert, ['The Room', 'the_room.png']);
+        db.run(insert, ['Two Brothers', 'two_brothers.png']);
+        db.run(insert, ['Star Wars - Episode 3', 'starwars.png']);
+        db.run(insert, ['Harry Potter und der Stein der Weisen', 'harry_potter_1.png']);
       }
     });
   }

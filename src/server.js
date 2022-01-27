@@ -1,9 +1,16 @@
 const path = require('path');
 
+// const md5 = require('md5');
+
 const express = require('express');
 const server = express();
 
+const bodyParser = require('body-parser');
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(bodyParser.json());
+
 const db = require('./server/database.js');
+// const request = require('http');
 
 const hostname = 'localhost';
 
@@ -48,8 +55,47 @@ try {
   console.log('invalid port');
 }
 
-server.get('/api/users', (req, res, next) => {
-  const sql = 'select * from Reservierung';
+/// ///////////////////
+// TODO:   input validierung falls post mit postman durchgeführt wird
+/// //////////////////
+
+// api calls for room
+
+server.post('/api/rooms', (req, res, next) => {
+  console.log(req.body);
+  const errors = [];
+  if (!req.body.name) {
+    errors.push('No name specified');
+  }
+  if (!req.body.rows) {
+    errors.push('No row specified');
+  }
+  if (!req.body.seatsPerRow) {
+    errors.push('No seats per row specified');
+  }
+  const data = {
+    name: req.body.name,
+    rows: req.body.rows,
+    seatsPerRow: req.body.seatsPerRow
+  };
+  console.log(data);
+  const sql = 'INSERT INTO rooms (name, rows, seatsPerRow) VALUES (?,?,?)';
+  const params = [data.name, data.rows, data.seatsPerRow];
+  db.run(sql, params, function (err, result) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: data,
+      id: this.lastID
+    });
+  });
+});
+
+server.get('/api/rooms', (req, res, next) => {
+  const sql = 'select * from rooms';
   const params = [];
   db.all(sql, params, (err, rows) => {
     if (err) {
@@ -63,8 +109,110 @@ server.get('/api/users', (req, res, next) => {
   });
 });
 
-server.get('/api/user', (req, res, next) => {
-  const sql = 'select * from Vorstellung';
+// api calls for reservations
+
+server.post('/api/reservations', (req, res, next) => {
+  console.log(req.body);
+  const errors = [];
+  if (!req.body.presentationId) {
+    errors.push('No row specified');
+  }
+  if (!req.body.seats) {
+    errors.push('No seats per row specified');
+  }
+  if (!req.body.customer) {
+    errors.push('No seats per row specified');
+  }
+  const data = {
+    presentationId: req.body.presentationId,
+    seats: req.body.seats,
+    customer: req.body.customer
+  };
+  console.log(data);
+  const sql = 'INSERT INTO reservations (presentationId, seats, customer) VALUES (?,?,?)';
+  const params = [data.presentationId, data.seats, data.customer];
+  db.run(sql, params, function (err, result) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: data,
+      id: this.lastID
+    });
+  });
+});
+
+server.get('/api/reservations', (req, res, next) => {
+  const sql = 'select reservationId, presentationId, seats from Reservierung';
+  const params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
+// api calls for presentation
+
+server.post('/api/presentations', (req, res, next) => {
+  console.log(req.body);
+  const errors = [];
+  if (!req.body.timestamp) {
+    errors.push('No timestamp specified');
+  }
+  if (!req.body.movieId) {
+    errors.push('No movieId specified');
+  }
+  if (!req.body.roomId) {
+    errors.push('No roomId specified');
+  }
+  const data = {
+    timestamp: req.body.timestamp,
+    movieId: req.body.movieId,
+    roomId: req.body.roomId
+  };
+  console.log(data);
+  const sql = 'INSERT INTO presentations (timestamp, movieId, roomId) VALUES (?,?,?)';
+  const params = [data.timestamp, data.movieId, data.roomId];
+  db.run(sql, params, function (err, result) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: data,
+      id: this.lastID
+    });
+  });
+});
+
+server.get('/api/presentations', (req, res, next) => {
+  const sql = 'select * from presentations';
+  const params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
+// api calls for movies
+
+server.get('/api/movies', (req, res, next) => {
+  const sql = 'select * from movies';
   const params = [];
   db.all(sql, params, (err, rows) => {
     if (err) {
