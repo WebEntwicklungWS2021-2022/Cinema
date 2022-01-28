@@ -59,7 +59,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
     db.run(`CREATE TABLE "reservations" (
         "reservationId" INTEGER,
         "presentationId" INTEGER,
-        "seats" INTEGER,
+        "seats" TEXT,
         "customer" TEXT,
         PRIMARY KEY("reservationId" AUTOINCREMENT),
         FOREIGN KEY("presentationId") REFERENCES "presentations"("presentationId")
@@ -70,7 +70,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
       } else {
         // Table just created, creating some rows
         const insert = 'INSERT INTO reservations (presentationId, seats, customer) VALUES (?,?,?)';
-        db.run(insert, ['1', '1', 'Joud']);
+        db.run(insert, ['4', '1', 'Joud']);
       }
     });
 
@@ -91,6 +91,12 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(insert, ['Two Brothers', 'two_brothers.png']);
         db.run(insert, ['Star Wars - Episode 3', 'starwars.png']);
         db.run(insert, ['Harry Potter und der Stein der Weisen', 'harry_potter_1.png']);
+        db.run(insert, ['13 Hours', '13_hours.png']);
+        db.run(insert, ['Catch Me If You Can', 'catch_me_if_you_can.png']);
+        db.run(insert, ['Jaws', 'jaws.png']);
+        db.run(insert, ['Joker', 'joker.png']);
+        db.run(insert, ['Shrek', 'shrek.png']);
+        db.run(insert, ['Zombieland - Doubletap', 'zombieland_2.png']);
       }
     });
   }
