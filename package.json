@@ -9,7 +9,7 @@
     "build": "bash ./build.sh",
     "lint": "semistandard",
     "fix": "semistandard --fix",
-    "clean": "rm -f build/*",
+    "clean": "rm -r build",
     "preclean": "rm -rf node_modules",
     "start": "node src/server.js",
     "prestart": "bash ./build.sh"
