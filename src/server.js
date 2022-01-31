@@ -31,8 +31,10 @@ server.get('/index_admin', (request, response) => {
   response.sendFile(path.join(__dirname, './views/admin/index_admin.html'));
 });
 
-server.get('/reservation', (request, response) => {
-  response.sendFile(path.join(__dirname, './views/user/reservation.html'));
+server.get('/reservation/:id', (request, response) => {
+  var params = [request.params.id]
+  console.log(params);
+  response.sendFile(path.join(__dirname, './views/user/reservation.html')); 
 });
 
 server.get('/create_presentation', (request, response) => {
@@ -96,6 +98,36 @@ server.post('/api/rooms', (req, res, next) => {
 
 server.get('/api/rooms', (req, res, next) => {
   const sql = 'select * from rooms';
+  const params = [];
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
+server.get('/api/movieDetails/:id', (req, res, next) =>{
+  const sql = 'select movies.name, movies.posterName, presentations.timestamp from movies join presentations on movies.movieId = presentations.movieId where movies.movieId = ?'
+  let movieId = req.params.id
+  console.log(movieId);
+  db.get(sql, [movieId], (err, rows) => {
+    if (err) {
+      res.status(400).json({error: err.message});
+      return;
+    }
+    res.json({
+      data: rows
+    });
+  });
+});
+
+server.get('/api/timestamp', (req, res, next) =>{
+  const sql = 'select timestamp from presentations join movies on presentations.movieId = movies.movieId where movies.name = "13 Hours"';
   const params = [];
   db.all(sql, params, (err, rows) => {
     if (err) {

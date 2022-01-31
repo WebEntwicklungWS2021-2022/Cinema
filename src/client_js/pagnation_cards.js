@@ -69,7 +69,7 @@ function displayCards (items, wrapper, cardsPerPage) {
     card.appendChild(cardTitle);
 
     const a = document.createElement('a');
-    a.setAttribute('href', '#');
+    a.setAttribute('href', 'reservation/'+ element.movieId);
     card.appendChild(a);
 
     const overlay = document.createElement('div');

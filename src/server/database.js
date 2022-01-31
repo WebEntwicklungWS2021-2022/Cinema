@@ -1,16 +1,4 @@
-/* const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('src/resources/database/cinema.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) return console.error(err.message);
-
-  console.log('Connection successful');
-});
-
-db.close((err) => {
-  if (err) return console.error(err.message);
-});/ */
-
 const sqlite3 = require('sqlite3').verbose();
-// const md5 = require('md5');
 
 const DBSOURCE = 'src/resources/database/db.sqlite';
 
@@ -52,7 +40,28 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
       } else {
         // Table just created, creating some rows
         const insert = 'INSERT INTO presentations (timestamp, movieId, roomId) VALUES (?,?,?)';
-        db.run(insert, ['2022-01-15 17:30', '1', '2']);
+        db.run(insert, ['2022-01-03 13:30', '1', '1']);
+        db.run(insert, ['2022-01-03 17:30', '1', '2']);
+        db.run(insert, ['2022-01-05 13:30', '2', '1']);
+        db.run(insert, ['2022-01-05 17:30', '2', '2']);
+        db.run(insert, ['2022-01-08 13:30', '3', '1']);
+        db.run(insert, ['2022-01-08 17:30', '3', '2']);
+        db.run(insert, ['2022-01-09 13:30', '4', '1']);
+        db.run(insert, ['2022-01-09 17:30', '4', '2']);
+        db.run(insert, ['2022-01-11 13:30', '5', '1']);
+        db.run(insert, ['2022-01-11 17:30', '5', '2']);
+        db.run(insert, ['2022-01-10 13:30', '6', '1']);
+        db.run(insert, ['2022-01-10 17:30', '6', '2']);
+        db.run(insert, ['2022-01-20 13:30', '7', '1']);
+        db.run(insert, ['2022-01-20 17:30', '7', '2']);
+        db.run(insert, ['2022-01-14 13:30', '8', '1']);
+        db.run(insert, ['2022-01-14 17:30', '8', '2']);
+        db.run(insert, ['2022-01-12 13:30', '9', '1']);
+        db.run(insert, ['2022-01-12 17:30', '9', '2']);
+        db.run(insert, ['2022-01-17 13:30', '10', '1']);
+        db.run(insert, ['2022-01-18 17:30', '10', '2']);
+        db.run(insert, ['2022-01-15 13:30', '11', '1']);
+        db.run(insert, ['2022-01-16 17:30', '11', '2']);
       }
     });
 
