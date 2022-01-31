@@ -8,6 +8,8 @@ let currentPage = 0;
 const cardWidth = 250;
 const cardHeigth = 400;
 
+let timer = null;
+
 window.addEventListener('load', onLoad());
 
 async function fetchAsync (url) {
@@ -23,22 +25,31 @@ async function onLoad () {
 }
 
 window.addEventListener('resize', function (event) {
+  if(timer != null){
+    this.clearTimeout(timer)
+    timer = null;
+  }
+  timer = this.setTimeout(refreshWindow, 500)
+});
+
+
+function refreshWindow(){
 
   if(currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1){
     currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
-    
   }
   console.log('ceil: ' + Math.ceil(movieData.data.length / calcMaxCards()));
   console.log('current Page: ' + currentPage);
   displayCards(movieData.data, cardContainer, calcMaxCards());
   pagination(movieData.data, paginationElement, calcMaxCards());
-});
+}
+
 
 function calcMaxCards () {
   const maxCardsPerRow = Math.floor((window.innerWidth - 30) / (cardWidth));
   const maxCardsPerCol = Math.floor(((window.innerHeight - 160) / cardHeigth));
   const maxCardsPerPage = maxCardsPerCol * maxCardsPerRow;
-  return maxCardsPerPage;
+  return Math.max(maxCardsPerPage, 1);
 }
 
 function displayCards (items, wrapper, cardsPerPage) {
