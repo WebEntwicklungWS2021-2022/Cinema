@@ -8,6 +8,7 @@ var seats = null;
 var count = null;
 var total = null;
 var timeSelect = null;
+var reserverdSeat = null;
 const url = document.URL;
 var ticketPrice = null;
 
@@ -79,9 +80,9 @@ timeSelect.addEventListener('change', (e) => {
 container.addEventListener('click', (e) => {
   if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
     e.target.classList.toggle('selected');
-    const thisId = e.target.id; 
-    console.log(thisId); 
-    console.log(document.getElementById(thisId).parentElement.id);
+    const thisId = e.target.id;
+    const thisClass = e.target.classList;
+    console.log(thisClass[1] + thisId);
     updateSelectedCount();
   }
 });
