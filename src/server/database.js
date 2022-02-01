@@ -13,7 +13,6 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         "roomId" INTEGER,
         "name" TEXT,
         "rows" INTEGER,
-        "reserved" TEXT,
         "seatsPerRow" INTEGER,
         PRIMARY KEY("roomId" AUTOINCREMENT)
     )`,
@@ -22,9 +21,9 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         // Table already created
       } else {
         // Table just created, creating some rows
-        const insert = 'INSERT INTO rooms (name, rows, reserved, seatsPerRow) VALUES (?,?,?,?)';
-        db.run(insert, ['room 1', '6', '', '8']);
-        db.run(insert, ['room 2', '6', '', '8']);
+        const insert = 'INSERT INTO rooms (name, rows, seatsPerRow) VALUES (?,?,?)';
+        db.run(insert, ['room 1', '6', '8']);
+        db.run(insert, ['room 2', '6', '8']);
       }
     });
     db.run(`CREATE TABLE "presentations" (

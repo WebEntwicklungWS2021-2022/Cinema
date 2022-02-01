@@ -90,11 +90,7 @@ server.post('/api/rooms', (req, res, next) => {
       res.status(400).json({ error: err.message });
       return;
     }
-    res.json({
-      message: 'success',
-      data: data,
-      id: this.lastID
-    });
+    res.redirect('/index_admin');
   });
 });
 

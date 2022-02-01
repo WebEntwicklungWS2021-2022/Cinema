@@ -58,8 +58,8 @@ function getParam(url) {
 async function onLoad() {
   const url = document.URL;
   if (document.URL.includes('reservation')) {
-    document.getElementById('kaufen').style.pointerEvents="none";
-    document.getElementById('kaufen').style.cursor="default";
+    document.getElementById('kaufen').style.pointerEvents = "none";
+    document.getElementById('kaufen').style.cursor = "default";
     container = document.querySelector('.container');
     seats = document.querySelectorAll('.row .seat:not(.occupied');
     count = document.getElementById('count');
@@ -70,22 +70,22 @@ async function onLoad() {
     displayMovieReservation(movieReservationData);
     ticketPrice = +timeSelect.value;
     // Movie select event
-timeSelect.addEventListener('change', (e) => {
-  ticketPrice = +e.target.value;
-  setMovieData(e.target.selectedIndex, e.target.value);
-  updateSelectedCount();
-});
+    timeSelect.addEventListener('change', (e) => {
+      ticketPrice = +e.target.value;
+      setMovieData(e.target.selectedIndex, e.target.value);
+      updateSelectedCount();
+    });
 
-// Seat click event
-container.addEventListener('click', (e) => {
-  if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
-    e.target.classList.toggle('selected');
-    const thisId = e.target.id;
-    const thisClass = e.target.classList;
-    console.log(thisClass[1] + thisId);
-    updateSelectedCount();
-  }
-});
+    // Seat click event
+    container.addEventListener('click', (e) => {
+      if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
+        e.target.classList.toggle('selected');
+        const thisId = e.target.id;
+        const thisClass = e.target.classList;
+        console.log(thisClass[1] + thisId);
+        updateSelectedCount();
+      }
+    });
   } else if (document.URL.includes('index_user')) {
     movieData = await fetchAsync('/api/movies');
     displayCards(movieData.data, cardContainer, calcMaxCards());
@@ -141,11 +141,11 @@ function updateSelectedCount() {
 
   const selectedSeatsCount = selectedSeats.length;
   if (selectedSeatsCount > 0) {
-    document.getElementById('kaufen').style.pointerEvents="auto";
-    document.getElementById('kaufen').style.cursor="pointer";
-  }else{
-    document.getElementById('kaufen').style.pointerEvents="none";
-    document.getElementById('kaufen').style.cursor="default";
+    document.getElementById('kaufen').style.pointerEvents = "auto";
+    document.getElementById('kaufen').style.cursor = "pointer";
+  } else {
+    document.getElementById('kaufen').style.pointerEvents = "none";
+    document.getElementById('kaufen').style.cursor = "default";
   }
   const url = document.URL;
   if (document.URL.includes('reservation')) {
@@ -194,8 +194,6 @@ window.addEventListener('resize', function (event) {
 
 
 function refreshWindow() {
-  const url = document.URL;
-  if (document.URL.includes('index_user')) {
   if (currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1) {
     currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
   }
@@ -204,7 +202,7 @@ function refreshWindow() {
   displayCards(movieData.data, cardContainer, calcMaxCards());
   pagination(movieData.data, paginationElement, calcMaxCards());
 }
-}
+
 
 
 function calcMaxCards() {
@@ -215,65 +213,65 @@ function calcMaxCards() {
 }
 
 function displayCards(items, wrapper, cardsPerPage) {
-  if (body == 'index') {
-    wrapper.innerHTML = '';
-    const start = cardsPerPage * currentPage;
-    const end = start + cardsPerPage;
-    const paginatedItems = items.slice(start, end);
+  //if (body == 'index') {
+  wrapper.innerHTML = '';
+  const start = cardsPerPage * currentPage;
+  const end = start + cardsPerPage;
+  const paginatedItems = items.slice(start, end);
 
-    for (let i = 0; i < paginatedItems.length; i++) {
-      const element = paginatedItems[i];
+  for (let i = 0; i < paginatedItems.length; i++) {
+    const element = paginatedItems[i];
 
-      const card = document.createElement('div');
-      card.classList.add('card');
+    const card = document.createElement('div');
+    card.classList.add('card');
 
-      const cardImage = document.createElement('div');
-      cardImage.classList.add('card-image');
-      cardImage.style.background = `url(pictures/${element.posterName})`;
-      cardImage.style.backgroundSize = 'cover';
-      card.appendChild(cardImage);
+    const cardImage = document.createElement('div');
+    cardImage.classList.add('card-image');
+    cardImage.style.background = `url(pictures/${element.posterName})`;
+    cardImage.style.backgroundSize = 'cover';
+    card.appendChild(cardImage);
 
-      const cardTitle = document.createElement('div');
-      cardTitle.classList.add('card-title');
-      const cardH2 = document.createElement('h2');
-      cardH2.appendChild(document.createTextNode(element.name));
-      cardTitle.appendChild(cardH2);
+    const cardTitle = document.createElement('div');
+    cardTitle.classList.add('card-title');
+    const cardH2 = document.createElement('h2');
+    cardH2.appendChild(document.createTextNode(element.name));
+    cardTitle.appendChild(cardH2);
 
-      card.appendChild(cardTitle);
+    card.appendChild(cardTitle);
 
-      const a = document.createElement('a');
-      a.setAttribute('href', `reservation/${element.movieId}`);
-      card.appendChild(a);
+    const a = document.createElement('a');
+    a.setAttribute('href', `reservation/${element.movieId}`);
+    card.appendChild(a);
 
-      const overlay = document.createElement('div');
-      overlay.classList.add('card-overlay');
-      a.appendChild(overlay);
+    const overlay = document.createElement('div');
+    overlay.classList.add('card-overlay');
+    a.appendChild(overlay);
 
-      const overlayText = document.createElement('div');
-      overlayText.classList.add('card-overlay-text');
-      overlayText.appendChild(document.createTextNode('Reservieren'));
-      overlay.appendChild(overlayText);
+    const overlayText = document.createElement('div');
+    overlayText.classList.add('card-overlay-text');
+    overlayText.appendChild(document.createTextNode('Reservieren'));
+    overlay.appendChild(overlayText);
 
-      wrapper.appendChild(card);
-    }
+    wrapper.appendChild(card);
   }
+  //}
 }
 
 
 function pagination(items, wrapper, cardsPerPage) {
-  if (body == 'index') {
-    wrapper.innerHTML = '';
+  //if (body == 'index') {
+  wrapper.innerHTML = '';
 
-    const pageCount = Math.ceil(items.length / cardsPerPage);
-    wrapper.appendChild(paginationButtonBack());
-    for (let i = 0; i < pageCount; i++) {
-      const button = paginationButton(i + 1);
-      button.classList.add('button');
-      button.innerText = i + 1;
-      wrapper.appendChild(button);
-    }
-    wrapper.appendChild(paginationButtonForward());
+  const pageCount = Math.ceil(items.length / cardsPerPage);
+  wrapper.appendChild(paginationButtonBack());
+  for (let i = 0; i < pageCount; i++) {
+    const button = paginationButton(i + 1);
+    button.classList.add('button');
+    button.innerText = i + 1;
+    wrapper.appendChild(button);
   }
+  wrapper.appendChild(paginationButtonForward());
+  //}
 }
 
 function paginationButtonBack() {

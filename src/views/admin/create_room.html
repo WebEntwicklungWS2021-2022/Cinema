@@ -7,24 +7,54 @@
     <title>MyCinema</title>
     <link rel="stylesheet" href="main.min.css">
 </head>
+
 <body>
+    <div class="form-container">
+        <form class="input-form" id="newRoom" action="/api/rooms" method="post">
+            <h2> Create a new Room </h2>
 
-    <h1> Create new Room </h1>
 
-    <form>
-        <label for="room_name"> room name: </label><br>
-        <input type="text" id="room_name" name="room_name"><br>
+                <label for="name"> room name: </label>
+                <input type="text" id="name" name="name">
 
-        <label for="rows_of_seats"> rows of seats (between 5 - 15): </label><br>
-        <input type="number" id="rows_of_seats" name="rows_of_seats" min="5" max="15"><br>
+            <br>
+          
+                <label for="rows"> select the amount of rows: </label>
+                <select type="select" id="rows" name="rows"> 
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
 
-        <label for="seats_per_row"> seats per row (between 5 - 15): </label><br>
-        <input type="number" id="rows_of_seats" name="rows_of_seats" min="5" max="15"><br>
+            <br>
 
-        <input type="submit">
-        
-      </form>
+                <label for="seatsPerRow"> select the amount seats per row: </label>
+                <select type="select" id="seatsPerRow" name="seatsPerRow">
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                </select>
+  
 
+
+                <button name="submit" type="submit" id="submit" > Create Room </button>
+
+
+        </form>
+    </div>
     <script type="text/javascript" src="main.min.js"></script>
 </body>
+
 </html>

@@ -9,33 +9,49 @@
 </head>
 <body>
 
-    <h1> Create new Presentation </h1>
+  <div class="form-container">
+    <form class="input-form" id="newPresentation" action="/api/presentations" method="post">
+        <h2> Create a new Presentation </h2>
 
-    <form>
-        <label for="movies">choose a movie:</label>
-        <select id="movie" name="movies">
-            <option value="spooderman">Spooderman</option>
-            <option value="specialman"> Specialman </option>
-            <option value="dennis"> The Adventures of Dennis </option>
-            <option value="solidersOfMars"> Soldier Of Mars</option>
-          </select><br>
 
-        <label for="rooms">choose a room:</label>
+            <label for="name"> room name: </label>
+            <input type="text" id="name" name="name">
 
-        <select id="movie" name="movies">
-            <option value="room1">Room 1</option>
-            <option value="room2"> Room 2 </option>
-            <option value="room3"> Room 3 </option>  
-        </select><br>
-        
+        <br>
+      
+            <label for="rows"> select the amount of rows: </label>
+            <select type="select" id="rows" name="rows"> 
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
 
-        <label for="appt">Choose a starting time:</label>
+        <br>
 
-        <input type="time" id="appt" name="appt" required>
+            <label for="seatsPerRow"> select the amount seats per row: </label>
+            <select type="select" id="seatsPerRow" name="seatsPerRow">
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+            </select>
 
-        <input type="submit">
-      </form>
 
+
+            <button name="submit" type="submit" id="submit" > Create Room </button>
+    </form>
+  
     <script type="text/javascript" src="main.min.js"></script>
 </body>
 </html>
