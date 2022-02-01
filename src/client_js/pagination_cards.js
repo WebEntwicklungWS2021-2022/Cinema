@@ -263,6 +263,29 @@ function refreshActiveButton() {
   newActiveButton.classList.add('active');
 }
 
+function refreshWindow() {
+  const paginationElement = document.getElementById('pagination');
+  const cardContainer = document.getElementById('card-container');
+  urlLink = document.URL;
+  if (urlLink.includes('index_user')) {
+  if (currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1) {
+    currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
+  }
+  console.log('ceil: ' + Math.ceil(movieData.data.length / calcMaxCards()));
+  console.log('current Page: ' + currentPage);
+  displayCards(movieData.data, cardContainer, calcMaxCards());
+  pagination(movieData.data, paginationElement, calcMaxCards());
+}
+}
+
+
+window.addEventListener('resize', function (event) {
+  if (timer != null) {
+    this.clearTimeout(timer)
+    timer = null;
+  }
+  timer = this.setTimeout(refreshWindow, 500)
+});
 /********************************************************************************************************/
 
 /* shared functions */
@@ -275,6 +298,7 @@ async function fetchAsync(url) {
 
 async function onLoad() {
   urlLink = document.URL;
+  printLetters(29);
   if (urlLink.includes('reservation')) {
     document.getElementById('kaufen').style.pointerEvents="none";
     document.getElementById('kaufen').style.cursor="default";
@@ -314,28 +338,18 @@ console.log(container);
   }
 }
 
-function refreshWindow() {
-  const paginationElement = document.getElementById('pagination');
-  const cardContainer = document.getElementById('card-container');
-  urlLink = document.URL;
-  if (urlLink.includes('index_user')) {
-  if (currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1) {
-    currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
+function printLetters(num){
+  let i = 65;
+  num += i;
+  for(i = 65; i < num; i++){
+    if ((i > 90)&&(num > 90)) {
+      i = 65;
+      num = num - 90;
+      console.log(num);
+    }
+    var str = String.fromCharCode(i);
+    console.log(str);
   }
-  console.log('ceil: ' + Math.ceil(movieData.data.length / calcMaxCards()));
-  console.log('current Page: ' + currentPage);
-  displayCards(movieData.data, cardContainer, calcMaxCards());
-  pagination(movieData.data, paginationElement, calcMaxCards());
 }
-}
-
-
-window.addEventListener('resize', function (event) {
-  if (timer != null) {
-    this.clearTimeout(timer)
-    timer = null;
-  }
-  timer = this.setTimeout(refreshWindow, 500)
-});
 
 
