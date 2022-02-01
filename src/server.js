@@ -23,6 +23,10 @@ server.get('/', (request, response) => {
   response.sendFile(path.join(__dirname, './views/selection.html'));
 });
 
+server.get('/test', (request, response) => {
+  response.sendFile(path.join(__dirname, './views/user/test.html'));
+});
+
 server.get('/index_user', (request, response) => {
   response.sendFile(path.join(__dirname, './views/user/index_user.html'));
 });
@@ -32,8 +36,6 @@ server.get('/index_admin', (request, response) => {
 });
 
 server.get('/reservation/:id', (request, response) => {
-  var params = [request.params.id]
-  console.log(params);
   response.sendFile(path.join(__dirname, './views/user/reservation.html')); 
 });
 
@@ -112,10 +114,10 @@ server.get('/api/rooms', (req, res, next) => {
 });
 
 server.get('/api/movieDetails/:id', (req, res, next) =>{
-  const sql = 'select movies.name, movies.posterName, presentations.timestamp from movies join presentations on movies.movieId = presentations.movieId where movies.movieId = ?'
+  const sql = 'select movies.name, movies.posterName, presentations.timestamp, movies.price from movies join presentations on movies.movieId = presentations.movieId where movies.movieId = ?'
   let movieId = req.params.id
   console.log(movieId);
-  db.get(sql, [movieId], (err, rows) => {
+  db.all(sql, [movieId], (err, rows) => {
     if (err) {
       res.status(400).json({error: err.message});
       return;

@@ -13,6 +13,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         "roomId" INTEGER,
         "name" TEXT,
         "rows" INTEGER,
+        "reserved" TEXT,
         "seatsPerRow" INTEGER,
         PRIMARY KEY("roomId" AUTOINCREMENT)
     )`,
@@ -21,9 +22,9 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         // Table already created
       } else {
         // Table just created, creating some rows
-        const insert = 'INSERT INTO rooms (name, rows, seatsPerRow) VALUES (?,?,?)';
-        db.run(insert, ['room 1', '1', '5']);
-        db.run(insert, ['room 2', '2', '4']);
+        const insert = 'INSERT INTO rooms (name, rows, reserved, seatsPerRow) VALUES (?,?,?,?)';
+        db.run(insert, ['room 1', '6', '', '8']);
+        db.run(insert, ['room 2', '6', '', '8']);
       }
     });
     db.run(`CREATE TABLE "presentations" (
@@ -87,6 +88,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
       "movieId" INTEGER,
       "name" TEXT,
       "posterName" TEXT,
+      "price" INTEGER,
       PRIMARY KEY("movieId" AUTOINCREMENT)
     )`,
     (err) => {
@@ -94,18 +96,18 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
       // Table already created
       } else {
       // Table just created, creating some rows
-        const insert = 'INSERT INTO movies (name, posterName) VALUES (?,?)';
-        db.run(insert, ['Sharknado', 'sharknado.png']);
-        db.run(insert, ['The Room', 'the_room.png']);
-        db.run(insert, ['Two Brothers', 'two_brothers.png']);
-        db.run(insert, ['Star Wars - Episode 3', 'starwars.png']);
-        db.run(insert, ['Harry Potter und der Stein der Weisen', 'harry_potter_1.png']);
-        db.run(insert, ['13 Hours', '13_hours.png']);
-        db.run(insert, ['Catch Me If You Can', 'catch_me_if_you_can.png']);
-        db.run(insert, ['Jaws', 'jaws.png']);
-        db.run(insert, ['Joker', 'joker.png']);
-        db.run(insert, ['Shrek', 'shrek.png']);
-        db.run(insert, ['Zombieland - Doubletap', 'zombieland_2.png']);
+        const insert = 'INSERT INTO movies (name, posterName, price) VALUES (?,?,?)';
+        db.run(insert, ['Sharknado', 'sharknado.png', '10']);
+        db.run(insert, ['The Room', 'the_room.png', '10']);
+        db.run(insert, ['Two Brothers', 'two_brothers.png', '10']);
+        db.run(insert, ['Star Wars - Episode 3', 'starwars.png', '10']);
+        db.run(insert, ['Harry Potter und der Stein der Weisen', 'harry_potter_1.png', '10']);
+        db.run(insert, ['13 Hours', '13_hours.png', '10']);
+        db.run(insert, ['Catch Me If You Can', 'catch_me_if_you_can.png', '10']);
+        db.run(insert, ['Jaws', 'jaws.png', '10']);
+        db.run(insert, ['Joker', 'joker.png', '10']);
+        db.run(insert, ['Shrek', 'shrek.png', '10']);
+        db.run(insert, ['Zombieland - Doubletap', 'zombieland_2.png', '10']);
       }
     });
   }

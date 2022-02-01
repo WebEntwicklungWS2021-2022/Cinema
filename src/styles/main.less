@@ -225,80 +225,189 @@ header{
 
 // seat designs
 
-#Username {
-	border: none;
-	border-bottom: 1px solid;
+#res-container{
+	align-items: center;
+	background-color: #242333;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Lato', 'sans-serif';
+	height: 100vh;
+	justify-content: center;
 }
-.screen {
-	width: 100%;
-	height: 20px;
-	background: #4388cc;
-	color: #fff;
-	line-height: 20px;
-	font-size: 15px;
+
+img {
+	height: 600px;
+	width: 400px;
 }
-.smallBox {
-	&::before {
-		content: ".";
-		width: 15px;
-		height: 15px;
-		float: left;
-		margin-right: 10px;
+
+.movie-container {
+	margin: 20px 0;
+  }
+
+  .movie-container {
+	select {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: #ffffff;
+		border-radius: 5px;
+		border: 0;
+		font-size: 14px;
+		margin-left: 10px;
+		padding: 5px 15px 5px 15px;
 	}
 }
-.greenBox {
-	&::before {
-		content: "";
-		background: Green;
+
+.container {
+	margin-bottom: 30px;
+	perspective: 1000px;
+}
+
+.seat {
+	background-color: #444451;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	height: 12px;
+	margin: 3px;
+	width: 15px;
+}
+
+@color0: #6feaf6; // Appears 2 times
+@color1: #ffffff; // Appears 2 times
+
+
+
+.seat.selected {
+	background-color: @color0;
+}
+.seat.occupied {
+	background-color: @color1;
+}
+.seat {
+	&:nth-of-type(2) {
+		margin-right: 18px;
 	}
-}
-.redBox {
-	&::before {
-		content: "";
-		background: Red;
+	&:nth-last-of-type(2) {
+		margin-left: 18px;
 	}
-}
-.emptyBox {
-	&::before {
-		content: "";
-		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-		background-color: #ccc;
-	}
-}
-.seats {
-	border: 1px solid red;
-	background: yellow;
-}
-.seatGap {
-	width: 40px;
-}
-.seatVGap {
-	height: 40px;
-}
-table {
-	text-align: center;
-}
-textarea {
-	border: none;
-	background: transparent;
-}
-input[type=checkbox] {
-	width: 0px;
-	margin-right: 18px;
-	&:before {
-		content: "";
-		width: 15px;
-		height: 15px;
-		display: inline-block;
-		vertical-align: middle;
-		text-align: center;
-		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-		background-color: #ccc;
-	}
-	&:checked {
-		&:before {
-			background-color: Green;
-			font-size: 15px;
+	&:not(.occupied) {
+		hover {
+			cursor: pointer;
+			transform: scale(1.2);
 		}
 	}
+}
+.showcase {
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	color: #777777;
+	display: flex;
+	justify-content: space-between;
+	list-style-type: none;
+	padding: 5px 10px;
+	.seat {
+		&:not(.occupied) {
+			hover {
+				cursor: default;
+				transform: scale(1);
+			}
+		}
+	}
+	li {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		margin: 0 10px;
+		small {
+			margin-left: 10px;
+		}
+	}
+}
+.row {
+	display: flex;
+}
+.screen {
+	background-color: @color1;
+	box-shadow: 0 3px 10px rgba(255, 255, 255, 0.75);
+	height: 70px;
+	margin: 15px 0;
+	transform: rotateX(-45deg);
+	width: 100%;
+}
+p.text {
+	margin: 5px 0;
+	span {
+		color: @color0;
+	}
+}
+
+//button
+.text-box {
+    margin-right: 170px;
+    margin-top: 5px;
+}
+
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 40px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all .2s;
+    position: absolute;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #777;
+}
+
+.btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s;
+}
+
+.btn-white::after {
+    background-color: #fff;
+}
+
+.btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated {
+    animation: moveInBottom 5s ease-out;
+    animation-fill-mode: backwards;
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
 }
