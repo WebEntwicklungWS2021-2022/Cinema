@@ -23,7 +23,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
         // Table just created, creating some rows
         const insert = 'INSERT INTO rooms (name, rows, seatsPerRow) VALUES (?,?,?)';
         db.run(insert, ['room 1', '6', '8']);
-        db.run(insert, ['room 2', '6', '8']);
+        db.run(insert, ['room 2', '6', '10']);
       }
     });
     db.run(`CREATE TABLE "presentations" (
