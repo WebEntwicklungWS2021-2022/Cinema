@@ -18,7 +18,9 @@
     <div id="title"></div>
     <div class="movie-container">
       <label>Pick a Showtime:</label>
-      <select id="time"></select>
+      <select id="time">
+        <option value="0" selected></option>
+      </select>
     </div>
 
     <ul class="showcase">
@@ -40,78 +42,16 @@
 
     <div class="container">
       <div class="screen"></div>
-      <div class="row" id="A">
-        <div class="seat A" id="1"></div>
-        <div class="seat A" id="2"></div>
-        <div class="seat A" id="3"></div>
-        <div class="seat A" id="4"></div>
-        <div class="seat A" id="5"></div>
-        <div class="seat A" id="6"></div>
-        <div class="seat A" id="7"></div>
-        <div class="seat A" id="8"></div>
-      </div>
-      <div class="row" id="B">
-        <div class="seat B" id="1"></div>
-        <div class="seat B" id="2"></div>
-        <div class="seat B" id="3"></div>
-        <div class="seat B" id="4"></div>
-        <div class="seat B" id="5"></div>
-        <div class="seat B" id="6"></div>
-        <div class="seat B" id="7"></div>
-        <div class="seat B" id="8"></div>
-      </div>
-
-      <div class="row" id="C">
-        <div class="seat C" id="1"></div>
-        <div class="seat C" id="2"></div>
-        <div class="seat C" id="3"></div>
-        <div class="seat C" id="4"></div>
-        <div class="seat C" id="5"></div>
-        <div class="seat C" id="6"></div>
-        <div class="seat C" id="7"></div>
-        <div class="seat C" id="8"></div>
-      </div>
-
-      <div class="row" id="E">
-        <div class="seat E" id="1"></div>
-        <div class="seat E" id="2"></div>
-        <div class="seat E" id="3"></div>
-        <div class="seat E" id="4"></div>
-        <div class="seat E" id="5"></div>
-        <div class="seat E" id="6"></div>
-        <div class="seat E" id="7"></div>
-        <div class="seat E" id="8"></div>
-      </div>
-
-      <div class="row" id="F">
-        <div class="seat F" id="1"></div>
-        <div class="seat F" id="2"></div>
-        <div class="seat F" id="3"></div>
-        <div class="seat F" id="4"></div>
-        <div class="seat F" id="5"></div>
-        <div class="seat F" id="6"></div>
-        <div class="seat F" id="7"></div>
-        <div class="seat F" id="8"></div>
-      </div>
-
-      <div class="row" id="G">
-        <div class="seat G" id="1"></div>
-        <div class="seat G" id="2"></div>
-        <div class="seat G" id="3"></div>
-        <div class="seat G" id="4"></div>
-        <div class="seat G" id="5"></div>
-        <div class="seat G" id="6"></div>
-        <div class="seat G" id="7"></div>
-        <div class="seat G" id="8"></div>
-      </div>
+      
     </div>
 
     <p class="text">
       You have selected <span id="count">0</span> seats for a price of $<span id="total">0</span>
     </p>
-    <div class="text-box">
-      <a id="kaufen" href="#" class="btn btn-white btn-animate">Bestätigen</a>
-  </div>
+    <form class="text-box" id="purchaseForm">
+      <input type="text" id="fname" name="name" placeholder="Enter your full name"><br>
+      <input class="btn" id="kaufen" type="submit" value="Bestätigen"/>
+    </form>
   </div>
     <script type="text/javascript" src="../main.min.js"></script>
   </body>

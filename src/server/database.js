@@ -79,7 +79,7 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
       } else {
         // Table just created, creating some rows
         const insert = 'INSERT INTO reservations (presentationId, seats, customer) VALUES (?,?,?)';
-        db.run(insert, ['4', '1', 'Joud']);
+        db.run(insert, ['4', '1A', 'Joud']);
       }
     });
 
