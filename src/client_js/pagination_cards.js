@@ -1,137 +1,381 @@
+const {
+  async
+} = require("jshint/src/prod-params");
+
 let movieData = null;
 window.addEventListener('load', onLoad());
-var urlLink = null;
 /* Joud's code */
 var container;
 var seats;
-var count = null;
-var total = null;
-var timeSelect = null;
-var reserverdSeat = null;
-var ticketPrice = null;
-let timer = null;
+var count;
+var total;
+var purchaseForm;
+var timeSelect;
+var ticketPrice;
+var presentationId;
 
-// get data from localstorage and populate ui
-function populateUI() {
-  timeSelect = document.getElementById('time');
-  const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
-  if (selectedSeats !== null && selectedSeats.length > 0) {
-    seats.forEach((seat, index) => {
-      if (selectedSeats.indexOf(index) > -1) {
-        seat.classList.add('selected');
+let timer;
+/* Setters and Getters */
+function getContainer() {
+  return this.container;
+}
+
+function setContainer(container) {
+  this.container = container;
+}
+
+function getSeats() {
+  return this.seats;
+}
+
+function setSeats(seats) {
+  this.seats = seats;
+}
+
+function getCount() {
+  return this.count;
+}
+
+function setCount(count) {
+  this.count = count;
+}
+
+function getTotal() {
+  return this.total;
+}
+
+function setTotal(total) {
+  this.total = total;
+}
+
+function getPurchaseForm() {
+  return this.purchaseForm;
+}
+
+function setPurchaseForm(purchaseForm) {
+  this.purchaseForm = purchaseForm;
+}
+
+function getTimeSelect() {
+  return this.timeSelect;
+}
+
+function setTimeSelect(timeSelect) {
+  this.timeSelect = timeSelect;
+}
+
+function getTicketPrice() {
+  return this.ticketPrice;
+}
+
+function setTicketPrice(ticketPrice) {
+  this.ticketPrice = ticketPrice;
+}
+
+function getPresentationId() {
+  return this.presentationId;
+}
+
+function setPresentationId(presentationId) {
+  this.presentationId = presentationId;
+}
+
+/******************************************************************************/
+//create seats
+function createSeats(items, room) {
+
+  var tempDiv = document.querySelectorAll('.row');
+  if (tempDiv != null) {
+    Array.prototype.forEach.call(tempDiv, function (node) {
+      node.parentNode.removeChild(node);
+    });
+  }
+  if (room > 0) {
+    var container = getContainer();
+    var rows, seatsPerRow;
+    for (var item in items) {
+      var innerItems = items[item];
+      for (var inner in innerItems) {
+        if (innerItems[inner].roomId == room) {
+          rows = innerItems[inner].rows;
+          seatsPerRow = innerItems[inner].seatsPerRow;
+        }
+      }
+    }
+    let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+    for (let i = 0; i < rows; i++) {
+      if (i < alphabet.length - 1) {
+        const rowDiv = document.createElement('div');
+        rowDiv.setAttribute('class', 'row');
+        rowDiv.setAttribute('id', alphabet[i]);
+        container.appendChild(rowDiv);
+      }
+    }
+    var tempRows = document.querySelectorAll('.row');
+    tempRows.forEach((row, index) => {
+      for (let i = 0; i < seatsPerRow; i++) {
+        const seatDiv = document.createElement('div');
+        seatDiv.setAttribute('class', 'seat');
+        var z = i + 1;
+        seatDiv.setAttribute('id', z + alphabet[index]);
+        row.appendChild(seatDiv);
       }
     });
   }
+}
 
-  const selectedMovieTimeIndex = localStorage.getItem('selectedMovieTimeIndex');
+function applyRefresh(){
+  var seats = getSeats();
+  var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+  if (selectedSeats != null) {
+    seats.forEach((seat, index)=>{
+      for(let a = 0; a < selectedSeats.length; a++){
+        if (selectedSeats[a] == index) {
+          if ((seat.classList.contains('selected'))) {
+            seat.classList.remove('selected');
+            seat.classList.add('occupied');  
+          }
+        }
+      }
+    });
+  }
+}
 
-  if (selectedMovieTimeIndex !== null) {
-    timeSelect.selectedIndex = selectedMovieTimeIndex;
+function populateUI() {
+  var seats = getSeats();
+  console.log(seats.length);
+  var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+  if (selectedSeats != null) {
+    seats.forEach((seat, index) => {
+      for (let a = 0; a < selectedSeats.length; a++) {
+        if (selectedSeats[a] == index) {
+          if (!(seat.classList.contains('occupied'))) {
+            seat.classList.add('selected');  
+          }
+        }
+      }
+    });
+    var timeSelect = getTimeSelect();
+    const selectedMovieTimeIndex = localStorage.getItem('selectedMovieTimeIndex');
+
+    if (selectedMovieTimeIndex !== null) {
+      timeSelect.selectedIndex = selectedMovieTimeIndex;
+    }
   }
 }
 
 function getParam(url) {
-  var string = url
+  var string = url;
   return string.split("/")[4];
 }
 
-function displayMovieReservation(items) {
+function checkReservation(presentationId, items, reservation) {
+  var reservedArr = [];
+  for (var item in items) {
+    var innerItems = items[item];
+    for (var inner in innerItems) {
+      if (innerItems[inner].presentationId == presentationId) {
+        reservedArr.push(innerItems[inner].seats);
+      }
+    }
+  }
+  var tempStr = reservedArr.toString();
+  var tempArr = tempStr.split(',').filter(n => n);
+  var reservArr = reservation.split(',').filter(n => n);
+  for (let i = 0; i < tempArr.length; i++) {
+    for (let j = 0; j < reservArr.length; j++) {
+      console.log('this arr: '+tempArr[i]+' this reservArr:'+reservArr[j]);
+      if (tempArr[i] == reservArr[j]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function refreshSeats(presentationId, items){
+  reservedArr = [];
+  for(var item in items){
+    var innerItems = items[item];
+    for (var inner in innerItems) {
+      if (innerItems[inner].presentationId == presentationId) {
+        reservedArr.push(innerItems[inner].seats);
+      }
+    }
+  }
+  var tempStr = reservedArr.toString();
+  var arr = tempStr.split(',').filter(n => n);
+  for(let i = 0; i < arr.length; i++){
+    var seat = document.getElementById(arr[i]);
+    if (seat.classList.contains('selected')) {
+      seat.classList.remove('selected');
+      seat.classList.add('occupied');
+    }else{
+      seat.classList.add('occupied');
+    }
+  }
+  applyRefresh();
+}
+
+function refreshElem(items) {
+  const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
+  for (var item in items) {
+    var innerItems = items[item];
+    for (var inner in innerItems) {
+      if (innerItems[inner].roomId == selectedMovieTimeValue) {
+        setPresentationId(innerItems[inner].presentationId);
+        setTicketPrice(innerItems[inner].price);
+        localStorage.setItem('moviePrice', getTicketPrice());
+      }
+    }
+  }
+}
+
+function resetLocalStorage() {
+  localStorage.clear();
+}
+
+function renderReservationPage(items) {
   const posterDiv = document.getElementById('poster-img');
   const img = document.createElement('img');
+  img.setAttribute('class', 'posterImage');
   const title = document.getElementById('title');
-  timeSelect = document.getElementById('time');
+  var timeSelect = getTimeSelect();
   var posterName = null;
-  var MovieName = null;
+  var movieName;
   var timestamp = [];
-
+  const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
   for (var item in items) {
-    let i = 0;
-    var innerItems = items[item]
+    var innerItems = items[item];
     for (var inner in innerItems) {
-      MovieName = innerItems[inner].name;
+      movieName = innerItems[inner].name;
       posterName = innerItems[inner].posterName;
+      if (selectedMovieTimeValue != null) {
+        if (selectedMovieTimeValue.length > 0) {
+          if (innerItems[inner].roomId == selectedMovieTimeValue) {
+            setPresentationId(innerItems[inner].presentationId);
+            localStorage.setItem('presentationId', getPresentationId());
+          }
+        }
+      }
     }
   }
   img.src = `../pictures/` + posterName;
   posterDiv.appendChild(img);
   populateSelect(timeSelect, items);
   const h2 = document.createElement('h2');
-  const textNode = document.createTextNode(MovieName);
+  const textNode = document.createTextNode(movieName);
   h2.appendChild(textNode);
   title.appendChild(h2);
+  setSeats(document.querySelectorAll('.row .seat'));
   populateUI();
 }
 
-// Save selected movie index and price
-function setMovieData(movieTimeIndex, moviePrice) {
+function setMovieData(movieTimeValue, movieTimeIndex) {
+  localStorage.setItem('selectedMovieTimeValue', movieTimeValue);
   localStorage.setItem('selectedMovieTimeIndex', movieTimeIndex);
-  localStorage.setItem('selectedMoviePrice', moviePrice);
-}
-
-// update total and count
-function updateSelectedCount() {
-  const selectedSeats = document.querySelectorAll('.row .seat.selected');
-
-  const seatsIndex = [...selectedSeats].map((seat) => [...seats].indexOf(seat));
-
-  localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
-
-  //copy selected seats into arr
-  // map through array
-  //return new array of indexes
-
-  const selectedSeatsCount = selectedSeats.length;
-  const anchor = document.getElementById('kaufen');
-  if (selectedSeatsCount > 0) {
-    anchor.style.pointerEvents="auto";
-    anchor.style.cursor="pointer";
-  }else{
-    anchor.style.pointerEvents="none";
-    anchor.style.cursor="default";
-  }
-  urlLink = document.URL;
-  if (urlLink.includes('reservation')) {
-    count = document.getElementById('count');
-    total = document.getElementById('total');
-    count.innerText = selectedSeatsCount;
-    total.innerText = selectedSeatsCount * ticketPrice;
-  }
 }
 
 function populateSelect(target, items) {
   if (!target) {
     return false;
   } else {
-    var posterName = null;
-    var MovieName = null;
+    var roomId = [];
     var timestamp = [];
-    var timePrice = [];
     for (var item in items) {
-      var innerItems = items[item]
+      var innerItems = items[item];
       for (var inner in innerItems) {
         posterName = innerItems[inner].posterName;
         timestamp.push(innerItems[inner].timestamp);
-        timePrice.push(innerItems[inner].price)
+        roomId.push(innerItems[inner].roomId);
       }
     }
     for (let i = 0; i < timestamp.length; i++) {
       var opt = document.createElement('option');
-      opt.value = timePrice[i];
+      opt.value = roomId[i];
       opt.innerHTML = timestamp[i];
       target.appendChild(opt);
     }
   }
 }
 
-// intial count and total
-urlLink = document.URL;
-  if (urlLink.includes('reservation')){
-    updateSelectedCount();
+function updateSelectedCount() {
+  const selectedSeats = document.querySelectorAll('.row .seat.selected');
+  var seats = getSeats();
+  var seatsIndex = [...selectedSeats].map(function (seat) {
+    return [...seats].indexOf(seat);
+  });
+  localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
+  const selectedSeatsCount = selectedSeats.length;
+  urlLink = document.URL;
+  if (urlLink.includes('reservation')) {
+    count = getCount();
+    total = getTotal();
+    count.innerText = selectedSeatsCount;
+    var tPrice;
+    if (localStorage.getItem('moviePrice') != null) {
+      if (localStorage.getItem('moviePrice').length > 0) {
+        setTicketPrice(localStorage.getItem('moviePrice'));
+        tPrice = getTicketPrice();
+      }
+    } else {
+      tPrice = getTicketPrice();
+    }
+    const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
+    total.innerText = selectedSeatsCount * tPrice;
   }
+}
+
+
+async function purchase(presentationId, seats, reservationData) {
+  const form = getPurchaseForm();
+  const formData = new FormData(form);
+  const formDataSerialized = Object.fromEntries(formData);
+
+  if (!validate(formDataSerialized.name)) {
+    alert('Please choose a seat and enter your full name');
+  } else {
+    var valid = checkReservation(presentationId, reservationData, seats);
+    if (valid) {
+        const jsonObject = {
+          presentationId: presentationId,
+          seats: seats,
+          name: formDataSerialized.name,
+        };
+        try {
+          const response = await window.fetch('/api/reservation/' + presentationId, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonObject),
+          });
+          const jsonData = await response.json();
+          console.log(jsonData);
+        } catch (error) {
+          console.log(error);
+        }
+        refreshSeats(presentationId, reservationData);
+      } else {
+        alert('Oops Seat(s) just got booked, pick different Seat(s) please');
+        refreshSeats(presentationId, reservationData);
+    }
+  }
+}
+
+//frontend input validation
+function validate(str) {
+  const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+  if (!(/^[a-zA-Z ]+$/.test(str)) || (selectedSeats == null) || (selectedSeats.length < 1)) {
+    return false;
+  }
+  return true;
+}
 
 /********************************************************************************************************/
 
-/* Christopher's Code */
+/* Christoph's Code */
 var currentPage = 0;
 const cardWidth = 250;
 const cardHeigth = 400;
@@ -144,62 +388,62 @@ function calcMaxCards() {
   return Math.max(maxCardsPerPage, 1);
 }
 
-function displayCards(items, wrapper, cardsPerPage) { 
-    wrapper.innerHTML = '';
-    const start = cardsPerPage * currentPage;
-    const end = start + cardsPerPage;
-    const paginatedItems = items.slice(start, end);
+function displayCards(items, wrapper, cardsPerPage) {
+  wrapper.innerHTML = '';
+  const start = cardsPerPage * currentPage;
+  const end = start + cardsPerPage;
+  const paginatedItems = items.slice(start, end);
 
-    for (let i = 0; i < paginatedItems.length; i++) {
-      const element = paginatedItems[i];
+  for (let i = 0; i < paginatedItems.length; i++) {
+    const element = paginatedItems[i];
 
-      const card = document.createElement('div');
-      card.classList.add('card');
+    const card = document.createElement('div');
+    card.classList.add('card');
 
-      const cardImage = document.createElement('div');
-      cardImage.classList.add('card-image');
-      cardImage.style.background = `url(pictures/${element.posterName})`;
-      cardImage.style.backgroundSize = 'cover';
-      card.appendChild(cardImage);
+    const cardImage = document.createElement('div');
+    cardImage.classList.add('card-image');
+    cardImage.style.background = `url(pictures/${element.posterName})`;
+    cardImage.style.backgroundSize = 'cover';
+    card.appendChild(cardImage);
 
-      const cardTitle = document.createElement('div');
-      cardTitle.classList.add('card-title');
-      const cardH2 = document.createElement('h2');
-      cardH2.appendChild(document.createTextNode(element.name));
-      cardTitle.appendChild(cardH2);
+    const cardTitle = document.createElement('div');
+    cardTitle.classList.add('card-title');
+    const cardH2 = document.createElement('h2');
+    cardH2.appendChild(document.createTextNode(element.name));
+    cardTitle.appendChild(cardH2);
 
-      card.appendChild(cardTitle);
+    card.appendChild(cardTitle);
 
-      const a = document.createElement('a');
-      a.setAttribute('href', `reservation/${element.movieId}`);
-      card.appendChild(a);
+    const a = document.createElement('a');
+    a.setAttribute('href', `reservation/${element.movieId}`);
+    card.appendChild(a);
 
-      const overlay = document.createElement('div');
-      overlay.classList.add('card-overlay');
-      a.appendChild(overlay);
+    const overlay = document.createElement('div');
+    overlay.classList.add('card-overlay');
+    a.appendChild(overlay);
 
-      const overlayText = document.createElement('div');
-      overlayText.classList.add('card-overlay-text');
-      overlayText.appendChild(document.createTextNode('Reservieren'));
-      overlay.appendChild(overlayText);
+    const overlayText = document.createElement('div');
+    overlayText.classList.add('card-overlay-text');
+    overlayText.appendChild(document.createTextNode('Reservieren'));
+    overlay.appendChild(overlayText);
 
-      wrapper.appendChild(card);
-    }
+    wrapper.appendChild(card);
+  }
 }
 
 
 function pagination(items, wrapper, cardsPerPage) {
-    wrapper.innerHTML = '';
+  wrapper.innerHTML = '';
 
-    const pageCount = Math.ceil(items.length / cardsPerPage);
-    wrapper.appendChild(paginationButtonBack());
-    for (let i = 0; i < pageCount; i++) {
-      const button = paginationButton(i + 1);
-      button.classList.add('button');
-      button.innerText = i + 1;
-      wrapper.appendChild(button);
-    }
-    wrapper.appendChild(paginationButtonForward());
+  const pageCount = Math.ceil(items.length / cardsPerPage);
+  wrapper.appendChild(paginationButtonBack());
+  for (let i = 0; i < pageCount; i++) {
+    const button = paginationButton(i + 1);
+    button.classList.add('button');
+    button.innerText = i + 1;
+    wrapper.appendChild(button);
+  }
+  wrapper.appendChild(paginationButtonForward());
 }
 
 function paginationButtonBack() {
@@ -246,7 +490,7 @@ function paginationButton(page) {
     currentPage = page - 1;
     displayCards(movieData.data, cardContainer, calcMaxCards(), currentPage);
 
-    let currentBtn = document.querySelector('.button.active')
+    let currentBtn = document.querySelector('.button.active');
     currentBtn.classList.remove('active');
 
     paginationButton.classList.add('active');
@@ -257,7 +501,7 @@ function paginationButton(page) {
 
 function refreshActiveButton() {
   const paginationElement = document.getElementById('pagination');
-  let currentBtn = document.querySelector('.button.active')
+  let currentBtn = document.querySelector('.button.active');
   currentBtn.classList.remove('active');
   let newActiveButton = paginationElement.childNodes[currentPage + 1];
   newActiveButton.classList.add('active');
@@ -268,23 +512,23 @@ function refreshWindow() {
   const cardContainer = document.getElementById('card-container');
   urlLink = document.URL;
   if (urlLink.includes('index_user')) {
-  if (currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1) {
-    currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
+    if (currentPage > Math.ceil(movieData.data.length / calcMaxCards()) - 1) {
+      currentPage = Math.ceil(movieData.data.length / calcMaxCards() - 1);
+    }
+    console.log('ceil: ' + Math.ceil(movieData.data.length / calcMaxCards()));
+    console.log('current Page: ' + currentPage);
+    displayCards(movieData.data, cardContainer, calcMaxCards());
+    pagination(movieData.data, paginationElement, calcMaxCards());
   }
-  console.log('ceil: ' + Math.ceil(movieData.data.length / calcMaxCards()));
-  console.log('current Page: ' + currentPage);
-  displayCards(movieData.data, cardContainer, calcMaxCards());
-  pagination(movieData.data, paginationElement, calcMaxCards());
-}
 }
 
 
 window.addEventListener('resize', function (event) {
   if (timer != null) {
-    this.clearTimeout(timer)
+    this.clearTimeout(timer);
     timer = null;
   }
-  timer = this.setTimeout(refreshWindow, 500)
+  timer = this.setTimeout(refreshWindow, 500);
 });
 /********************************************************************************************************/
 
@@ -297,38 +541,97 @@ async function fetchAsync(url) {
 }
 
 async function onLoad() {
-  urlLink = document.URL;
-  printLetters(29);
+  var urlLink = document.URL;
   if (urlLink.includes('reservation')) {
-    document.getElementById('kaufen').style.pointerEvents="none";
-    document.getElementById('kaufen').style.cursor="default";
-    container = document.querySelector('.container');
-    seats = document.querySelectorAll('.row .seat:not(.occupied');
-    count = document.getElementById('count');
-    total = document.getElementById('total');
-    timeSelect = document.getElementById('time');
-    var param = getParam(urlLink);
-    movieReservationData = await fetchAsync('/api/movieDetails/' + param);
-    displayMovieReservation(movieReservationData);
-    ticketPrice = +timeSelect.value;
-    // Movie select event
-    timeSelect.addEventListener('change', (e) => {
-    ticketPrice = +e.target.value;
-    setMovieData(e.target.selectedIndex, e.target.value);
-    updateSelectedCount();
-});
-console.log(container);
+    var urlP = getParam(urlLink);
+    var storedUrlP = localStorage.getItem('urlParam');
+    if (storedUrlP != null) {
+      if (storedUrlP.length > 0) {
+        if (urlP != storedUrlP) {
+          resetLocalStorage();
+        }
+      }
+    }
+    setPurchaseForm(document.querySelector('form'));
+    setSeats(document.querySelectorAll('.row .seat'));
+    setTimeSelect(document.getElementById('time'));
+    setCount(document.getElementById('count'));
+    setTotal(document.getElementById('total'));
+    setTimeSelect(document.getElementById('time'));
+    setContainer(document.querySelector('.container'));
+    roomsData = await fetchAsync('/api/rooms');
+    var selectedMovieTimeValue = JSON.parse(localStorage.getItem('selectedMovieTimeValue'));
+    var timeSelect = getTimeSelect();
+    reservationData = await fetchAsync('/api/reservations');
+    if (selectedMovieTimeValue != null) {
+      createSeats(roomsData, selectedMovieTimeValue);
 
-// Seat click event
-  container.addEventListener('click', (e) => {
-  if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
-    e.target.classList.toggle('selected');
-    const thisId = e.target.id;
-    const thisClass = e.target.classList;
-    console.log(thisClass[1] + thisId);
-    updateSelectedCount();
-  }
-});
+    } else {
+      createSeats(roomsData, timeSelect.value);
+    }
+    var param = getParam(urlLink);
+    localStorage.setItem('urlParam', param);
+    movieReservationData = await fetchAsync('/api/movieDetails/' + param);
+    renderReservationPage(movieReservationData);
+    var presentationId = getPresentationId();
+    refreshSeats(presentationId, reservationData);
+    const moviePrice = localStorage.getItem('moviePrice');
+    if (moviePrice != null) {
+      if (moviePrice.length > 0) {
+        setTicketPrice(moviePrice);
+      }
+    }
+    timeSelect.addEventListener('change', (e) => {
+      setMovieData(e.target.value, e.target.selectedIndex);
+      createSeats(roomsData, e.target.value);
+      for (var item in movieReservationData) {
+        var innerItems = movieReservationData[item];
+        for (var inner in innerItems) {
+          if (selectedMovieTimeValue != null) {
+            if (selectedMovieTimeValue.length > 0) {
+              if (innerItems[inner].roomId == selectedMovieTimeValue) {
+                setPresentationId(innerItems[inner].presentationId);
+                localStorage.setItem('presentationId', getPresentationId());
+              }
+            }
+          }
+        }
+      }
+      var presentationId = getPresentationId();
+      refreshSeats(presentationId, reservationData);
+      refreshElem(movieReservationData);
+      setSeats(document.querySelectorAll('.row .seat'));
+      updateSelectedCount();
+    });
+    // Seat click event
+    var container = getContainer();
+    container.addEventListener('click', (e) => {
+      if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
+        e.target.classList.toggle('selected');
+        setSeats(document.querySelectorAll('.row .seat'));
+        updateSelectedCount();
+      }
+    });
+    const form = getPurchaseForm();
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+      const seats = getSeats();
+      var reservedSeatsString = '';
+      seats.forEach((seat, index) => {
+        for (let a = 0; a < selectedSeats.length; a++) {
+          if (selectedSeats[a] == index) {
+            reservedSeatsString += seat.id + ',';
+          }
+        }
+      });
+      var arr = reservedSeatsString.split(',').filter(n => n);
+      reservedSeatsString = arr.toString();
+      const presentationId = getPresentationId();
+      console.log('presentationsId: '+presentationId);
+      purchase(presentationId, reservedSeatsString, reservationData);
+
+    });
   } else if (urlLink.includes('index_user')) {
     const paginationElement = document.getElementById('pagination');
     const cardContainer = document.getElementById('card-container');
@@ -337,19 +640,3 @@ console.log(container);
     pagination(movieData.data, paginationElement, calcMaxCards());
   }
 }
-
-function printLetters(num){
-  let i = 65;
-  num += i;
-  for(i = 65; i < num; i++){
-    if ((i > 90)&&(num > 90)) {
-      i = 65;
-      num = num - 90;
-      console.log(num);
-    }
-    var str = String.fromCharCode(i);
-    console.log(str);
-  }
-}
-
-
