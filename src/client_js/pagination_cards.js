@@ -81,161 +81,7 @@ function setPresentationId(presentationId) {
 }
 
 /******************************************************************************/
-//create seats
-function createSeats(items, room) {
-
-  var tempDiv = document.querySelectorAll('.row');
-  if (tempDiv != null) {
-    Array.prototype.forEach.call(tempDiv, function (node) {
-      node.parentNode.removeChild(node);
-    });
-  }
-  if (room > 0) {
-    var container = getContainer();
-    var rows, seatsPerRow;
-    for (var item in items) {
-      var innerItems = items[item];
-      for (var inner in innerItems) {
-        if (innerItems[inner].roomId == room) {
-          rows = innerItems[inner].rows;
-          seatsPerRow = innerItems[inner].seatsPerRow;
-        }
-      }
-    }
-    let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-    for (let i = 0; i < rows; i++) {
-      if (i < alphabet.length - 1) {
-        const rowDiv = document.createElement('div');
-        rowDiv.setAttribute('class', 'row');
-        rowDiv.setAttribute('id', alphabet[i]);
-        container.appendChild(rowDiv);
-      }
-    }
-    var tempRows = document.querySelectorAll('.row');
-    tempRows.forEach((row, index) => {
-      for (let i = 0; i < seatsPerRow; i++) {
-        const seatDiv = document.createElement('div');
-        seatDiv.setAttribute('class', 'seat');
-        var z = i + 1;
-        seatDiv.setAttribute('id', z + alphabet[index]);
-        row.appendChild(seatDiv);
-      }
-    });
-  }
-}
-
-function applyRefresh(){
-  var seats = getSeats();
-  var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
-  if (selectedSeats != null) {
-    seats.forEach((seat, index)=>{
-      for(let a = 0; a < selectedSeats.length; a++){
-        if (selectedSeats[a] == index) {
-          if ((seat.classList.contains('selected'))) {
-            seat.classList.remove('selected');
-            seat.classList.add('occupied');  
-          }
-        }
-      }
-    });
-  }
-}
-
-function populateUI() {
-  var seats = getSeats();
-  console.log(seats.length);
-  var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
-  if (selectedSeats != null) {
-    seats.forEach((seat, index) => {
-      for (let a = 0; a < selectedSeats.length; a++) {
-        if (selectedSeats[a] == index) {
-          if (!(seat.classList.contains('occupied'))) {
-            seat.classList.add('selected');  
-          }
-        }
-      }
-    });
-    var timeSelect = getTimeSelect();
-    const selectedMovieTimeIndex = localStorage.getItem('selectedMovieTimeIndex');
-
-    if (selectedMovieTimeIndex !== null) {
-      timeSelect.selectedIndex = selectedMovieTimeIndex;
-    }
-  }
-}
-
-function getParam(url) {
-  var string = url;
-  return string.split("/")[4];
-}
-
-function checkReservation(presentationId, items, reservation) {
-  var reservedArr = [];
-  for (var item in items) {
-    var innerItems = items[item];
-    for (var inner in innerItems) {
-      if (innerItems[inner].presentationId == presentationId) {
-        reservedArr.push(innerItems[inner].seats);
-      }
-    }
-  }
-  var tempStr = reservedArr.toString();
-  var tempArr = tempStr.split(',').filter(n => n);
-  var reservArr = reservation.split(',').filter(n => n);
-  for (let i = 0; i < tempArr.length; i++) {
-    for (let j = 0; j < reservArr.length; j++) {
-      console.log('this arr: '+tempArr[i]+' this reservArr:'+reservArr[j]);
-      if (tempArr[i] == reservArr[j]) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-function refreshSeats(presentationId, items){
-  reservedArr = [];
-  for(var item in items){
-    var innerItems = items[item];
-    for (var inner in innerItems) {
-      if (innerItems[inner].presentationId == presentationId) {
-        reservedArr.push(innerItems[inner].seats);
-      }
-    }
-  }
-  var tempStr = reservedArr.toString();
-  var arr = tempStr.split(',').filter(n => n);
-  for(let i = 0; i < arr.length; i++){
-    var seat = document.getElementById(arr[i]);
-    if (seat.classList.contains('selected')) {
-      seat.classList.remove('selected');
-      seat.classList.add('occupied');
-    }else{
-      seat.classList.add('occupied');
-    }
-  }
-  applyRefresh();
-}
-
-function refreshElem(items) {
-  const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
-  for (var item in items) {
-    var innerItems = items[item];
-    for (var inner in innerItems) {
-      if (innerItems[inner].roomId == selectedMovieTimeValue) {
-        setPresentationId(innerItems[inner].presentationId);
-        setTicketPrice(innerItems[inner].price);
-        localStorage.setItem('moviePrice', getTicketPrice());
-      }
-    }
-  }
-}
-
-function resetLocalStorage() {
-  localStorage.clear();
-}
-
+/* Rendering Function */
 function renderReservationPage(items) {
   const posterDiv = document.getElementById('poster-img');
   const img = document.createElement('img');
@@ -272,11 +118,6 @@ function renderReservationPage(items) {
   populateUI();
 }
 
-function setMovieData(movieTimeValue, movieTimeIndex) {
-  localStorage.setItem('selectedMovieTimeValue', movieTimeValue);
-  localStorage.setItem('selectedMovieTimeIndex', movieTimeIndex);
-}
-
 function populateSelect(target, items) {
   if (!target) {
     return false;
@@ -300,71 +141,216 @@ function populateSelect(target, items) {
   }
 }
 
-function updateSelectedCount() {
-  const selectedSeats = document.querySelectorAll('.row .seat.selected');
-  var seats = getSeats();
-  var seatsIndex = [...selectedSeats].map(function (seat) {
-    return [...seats].indexOf(seat);
-  });
-  localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
-  const selectedSeatsCount = selectedSeats.length;
-  urlLink = document.URL;
-  if (urlLink.includes('reservation')) {
-    count = getCount();
-    total = getTotal();
-    count.innerText = selectedSeatsCount;
-    var tPrice;
-    if (localStorage.getItem('moviePrice') != null) {
-      if (localStorage.getItem('moviePrice').length > 0) {
-        setTicketPrice(localStorage.getItem('moviePrice'));
+function updateData(items){
+  const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
+  for (var item in items) {
+    var innerItems = items[item];
+    for (var inner in innerItems) {
+      if (innerItems[inner].roomId == selectedMovieTimeValue) {
+        setPresentationId(innerItems[inner].presentationId);
+        setTicketPrice(innerItems[inner].price);
+        localStorage.setItem('moviePrice', getTicketPrice());
+      }
+    }
+  }
+}
+
+  /*
+  ** PARAMS**
+  * reservationData: reservationData
+  * roomsData: roomsData
+  * room: roomId
+  * presentationId: presentationId
+  **/
+  function refreshSeatsUI(reservationData, roomsData, room, presentationId){
+    if ((roomsData != null)&&(roomsData.data.length > 0)) {
+        createSeats(roomsData, room);
+        if ((reservationData != null)&&(reservationData.data.length >0)) {
+            populateOccupied(reservationData, presentationId);
+        }
+        populateUI();
+    }
+  }
+
+//create seats
+ /*
+  ** PARAMS**
+  * items: roomsData
+  * room: roomId
+  **/
+  function createSeats(items, room){
+    var tempDiv = document.querySelectorAll('.row');
+        if (tempDiv != null) {
+            Array.prototype.forEach.call(tempDiv, function (node) {
+                node.parentNode.removeChild(node);
+            });
+        }
+        if (room > 0) {
+        var container = getContainer();
+        var rows, seatsPerRow;
+        for (var item in items) {
+            var innerItems = items[item];
+            for (var inner in innerItems) {
+                if (innerItems[inner].roomId == room) {
+                    rows = innerItems[inner].rows;
+                    seatsPerRow = innerItems[inner].seatsPerRow;
+                }
+            }
+        }
+        let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    
+        for (let i = 0; i < rows; i++) {
+            if (i < alphabet.length - 1) {
+                const rowDiv = document.createElement('div');
+                rowDiv.setAttribute('class', 'row');
+                rowDiv.setAttribute('id', alphabet[i]);
+                container.appendChild(rowDiv);
+            }
+        }
+        var tempRows = document.querySelectorAll('.row');
+        tempRows.forEach((row, index) => {
+            for (let i = 0; i < seatsPerRow; i++) {
+                const seatDiv = document.createElement('div');
+                seatDiv.setAttribute('class', 'seat');
+                var z = i + 1;
+                seatDiv.setAttribute('id', z + alphabet[index]);
+                row.appendChild(seatDiv);
+                }
+            });
+        }
+        setSeats(document.querySelectorAll('.row .seat'));
+  }
+
+      /*
+  ** PARAMS**
+  * items: reservationData
+  * presentationId: presentationId
+  **/
+  function populateOccupied(items, presentationId){
+    var reservedArr = [];
+    for(var item in items){
+        var innerItems = items[item];
+        for(var inner in innerItems){
+            if(innerItems[inner].presentationId == presentationId){
+                reservedArr.push(innerItems[inner].seats);
+            }
+        }
+    }
+    // Filter the array just in case the data was corrupted 
+    var tempStr = reservedArr.toString();
+    reservedArr = tempStr.split(',').filter(n => n);
+  
+    var seats = getSeats();
+    /*the idea is we loop through seats and check the id of the seat
+    * if it matches the reserved seat then we check the class
+    * if it contains selected, we remove the class value "selected"
+    * add "occupied" to the classList no matter what
+    */
+    seats.forEach((seat, index) =>{
+        for(let i = 0; i < reservedArr.length; i++){
+            if (seat.id == reservedArr[i]) {
+                if (seat.classList.contains('selected')) {
+                    seat.classList.remove('selected');
+                    seat.classList.add('occupied');
+                }else{
+                    seat.classList.add('occupied');
+                }
+            }
+        }
+    });
+    
+  }
+
+  function populateUI() {
+    var seats = getSeats();
+    var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+    if (selectedSeats != null) {
+      seats.forEach((seat, index) => {
+        for (let a = 0; a < selectedSeats.length; a++) {
+          if (selectedSeats[a] == index) {
+            if (!(seat.classList.contains('occupied'))) {
+              seat.classList.add('selected');  
+            }
+          }
+        }
+      });
+      var timeSelect = getTimeSelect();
+      const selectedMovieTimeIndex = localStorage.getItem('selectedMovieTimeIndex');
+  
+      if (selectedMovieTimeIndex !== null) {
+        timeSelect.selectedIndex = selectedMovieTimeIndex;
+      }
+    }
+  }
+
+  function updateSelectedCount() {
+    const selectedSeats = document.querySelectorAll('.row .seat.selected');
+    var seats = getSeats();
+    var seatsIndex = [...selectedSeats].map(function (seat) {
+      return [...seats].indexOf(seat);
+    });
+    localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
+    const selectedSeatsCount = selectedSeats.length;
+    urlLink = document.URL;
+    if (urlLink.includes('reservation')) {
+      count = getCount();
+      total = getTotal();
+      count.innerText = selectedSeatsCount;
+      var tPrice;
+      if (localStorage.getItem('moviePrice') != null) {
+        if (localStorage.getItem('moviePrice').length > 0) {
+          setTicketPrice(localStorage.getItem('moviePrice'));
+          tPrice = getTicketPrice();
+        }
+      } else {
         tPrice = getTicketPrice();
       }
+      total.innerText = selectedSeatsCount * tPrice;
+    }
+  }
+
+  function setMovieData(movieTimeValue, movieTimeIndex) {
+    localStorage.setItem('selectedMovieTimeValue', movieTimeValue);
+    localStorage.setItem('selectedMovieTimeIndex', movieTimeIndex);
+  }
+
+  async function purchase(presentationId, seats, reservationData, roomsData, room) {
+    const form = getPurchaseForm();
+    const formData = new FormData(form);
+    const formDataSerialized = Object.fromEntries(formData);
+  
+    if (!validate(formDataSerialized.name)) {
+      alert('Please choose a seat and enter your full name');
     } else {
-      tPrice = getTicketPrice();
-    }
-    const selectedMovieTimeValue = localStorage.getItem('selectedMovieTimeValue');
-    total.innerText = selectedSeatsCount * tPrice;
-  }
-}
-
-
-async function purchase(presentationId, seats, reservationData) {
-  const form = getPurchaseForm();
-  const formData = new FormData(form);
-  const formDataSerialized = Object.fromEntries(formData);
-
-  if (!validate(formDataSerialized.name)) {
-    alert('Please choose a seat and enter your full name');
-  } else {
-    var valid = checkReservation(presentationId, reservationData, seats);
-    if (valid) {
-        const jsonObject = {
-          presentationId: presentationId,
-          seats: seats,
-          name: formDataSerialized.name,
-        };
-        try {
-          const response = await window.fetch('/api/reservation/' + presentationId, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(jsonObject),
-          });
-          const jsonData = await response.json();
-          console.log(jsonData);
-        } catch (error) {
-          console.log(error);
-        }
-        refreshSeats(presentationId, reservationData);
-      } else {
-        alert('Oops Seat(s) just got booked, pick different Seat(s) please');
-        refreshSeats(presentationId, reservationData);
+      var valid = checkReservation(presentationId, reservationData, seats);
+      if (valid) {
+          const jsonObject = {
+            presentationId: presentationId,
+            seats: seats,
+            name: formDataSerialized.name,
+          };
+          try {
+            const response = await window.fetch('/api/reservation/' + presentationId, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(jsonObject),
+            });
+            const jsonData = await response.json();
+            console.log(jsonData);
+          } catch (error) {
+            console.log(error);
+          }
+          updateReservationData(roomsData, room, presentationId);
+        } else {
+          alert('Oops Seat(s) just got booked, pick different Seat(s) please');
+          updateReservationData(roomsData, room, presentationId);
+      }
     }
   }
-}
 
-//frontend input validation
+  //frontend input validation
 function validate(str) {
   const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
   if (!(/^[a-zA-Z ]+$/.test(str)) || (selectedSeats == null) || (selectedSeats.length < 1)) {
@@ -372,6 +358,50 @@ function validate(str) {
   }
   return true;
 }
+
+function checkReservation(presentationId, items, reservation) {
+  var reservedArr = [];
+  for (var item in items) {
+    var innerItems = items[item];
+    for (var inner in innerItems) {
+      if (innerItems[inner].presentationId == presentationId) {
+        reservedArr.push(innerItems[inner].seats);
+      }
+    }
+  }
+  var tempStr = reservedArr.toString();
+  var tempArr = tempStr.split(',').filter(n => n);
+  var reservArr = reservation.split(',').filter(n => n);
+  for (let i = 0; i < tempArr.length; i++) {
+    for (let j = 0; j < reservArr.length; j++) {
+      console.log('this arr: '+tempArr[i]+' this reservArr:'+reservArr[j]);
+      if (tempArr[i] == reservArr[j]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+
+function getParam(url) {
+  var string = url;
+  return string.split("/")[4];
+}
+
+
+function resetLocalStorage() {
+  localStorage.clear();
+}
+
+
+
+async function updateReservationData(roomsData, room, presentationId){
+  reservationData = await fetchAsync('/api/reservations');
+  refreshSeatsUI(reservationData, roomsData, room, presentationId);
+}
+
+
 
 /********************************************************************************************************/
 
@@ -559,49 +589,40 @@ async function onLoad() {
     setTotal(document.getElementById('total'));
     setTimeSelect(document.getElementById('time'));
     setContainer(document.querySelector('.container'));
-    roomsData = await fetchAsync('/api/rooms');
-    var selectedMovieTimeValue = JSON.parse(localStorage.getItem('selectedMovieTimeValue'));
-    var timeSelect = getTimeSelect();
-    reservationData = await fetchAsync('/api/reservations');
-    if (selectedMovieTimeValue != null) {
-      createSeats(roomsData, selectedMovieTimeValue);
+    localStorage.setItem('urlParam', urlP);
+      //api calls
+      roomsData = await fetchAsync('/api/rooms');
+      reservationData = await fetchAsync('/api/reservations');
+      movieReservationData = await fetchAsync('/api/movieDetails/' + urlP);
+      // get values from local storage
+      var selectedMovieTimeValue = JSON.parse(localStorage.getItem('selectedMovieTimeValue'));
+      const moviePrice = JSON.parse(localStorage.getItem('moviePrice'));
 
-    } else {
-      createSeats(roomsData, timeSelect.value);
-    }
-    var param = getParam(urlLink);
-    localStorage.setItem('urlParam', param);
-    movieReservationData = await fetchAsync('/api/movieDetails/' + param);
+    var timeSelect = getTimeSelect();
+    //render the reservation page
     renderReservationPage(movieReservationData);
-    var presentationId = getPresentationId();
-    refreshSeats(presentationId, reservationData);
-    const moviePrice = localStorage.getItem('moviePrice');
     if (moviePrice != null) {
       if (moviePrice.length > 0) {
         setTicketPrice(moviePrice);
       }
     }
-    timeSelect.addEventListener('change', (e) => {
+    var presentationId = getPresentationId();
+    //if selectedMovieTimeValue is already stored in the local storage then use it create seats
+    if ((selectedMovieTimeValue!=null)&&(selectedMovieTimeValue>0)) {
+      refreshSeatsUI(reservationData,roomsData, selectedMovieTimeValue, presentationId);
+    }else{
+      refreshSeatsUI(reservationData, roomsData, timeSelect.value, presentationId);
+    }
+    timeSelect.addEventListener('change', async(e) => {
+      //make new API calls
+      roomsDataOnChange = await fetchAsync('/api/rooms');
+      reservationDataOnChange = await fetchAsync('/api/reservations');
+      movieReservationDataOnChange = await fetchAsync('/api/movieDetails/' + urlP);
+      //set data in local storage
       setMovieData(e.target.value, e.target.selectedIndex);
-      createSeats(roomsData, e.target.value);
-      for (var item in movieReservationData) {
-        var innerItems = movieReservationData[item];
-        for (var inner in innerItems) {
-          if (selectedMovieTimeValue != null) {
-            if (selectedMovieTimeValue.length > 0) {
-              if (innerItems[inner].roomId == selectedMovieTimeValue) {
-                setPresentationId(innerItems[inner].presentationId);
-                localStorage.setItem('presentationId', getPresentationId());
-              }
-            }
-          }
-        }
-      }
-      var presentationId = getPresentationId();
-      refreshSeats(presentationId, reservationData);
-      refreshElem(movieReservationData);
-      setSeats(document.querySelectorAll('.row .seat'));
-      updateSelectedCount();
+      updateData(movieReservationDataOnChange);
+      var presentationIdOnChange = getPresentationId();
+      refreshSeatsUI(reservationDataOnChange, roomsDataOnChange, e.target.value, presentationIdOnChange);
     });
     // Seat click event
     var container = getContainer();
@@ -613,24 +634,29 @@ async function onLoad() {
       }
     });
     const form = getPurchaseForm();
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
-      const seats = getSeats();
-      var reservedSeatsString = '';
-      seats.forEach((seat, index) => {
-        for (let a = 0; a < selectedSeats.length; a++) {
-          if (selectedSeats[a] == index) {
-            reservedSeatsString += seat.id + ',';
-          }
+    form.addEventListener('submit', async(e) => {
+    e.preventDefault();
+    //make new API calls
+      roomsDataOnSubmit = await fetchAsync('/api/rooms');
+      reservationDataOnSubmit = await fetchAsync('/api/reservations');
+      movieReservationDataOnSubmit = await fetchAsync('/api/movieDetails/' + urlP);
+    updateData(movieReservationDataOnSubmit);
+    var presentationIdOnSubmit = getPresentationId();
+    var roomIdOnSubmit = localStorage.getItem('selectedMovieTimeValue');
+    var selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+    const seats = getSeats();
+    var reservedSeatsString = '';
+    seats.forEach((seat, index) => {
+    for (let a = 0; a < selectedSeats.length; a++) {
+      if (selectedSeats[a] == index) {
+        reservedSeatsString += seat.id + ',';
         }
-      });
+      }
+    });
       var arr = reservedSeatsString.split(',').filter(n => n);
       reservedSeatsString = arr.toString();
-      const presentationId = getPresentationId();
-      console.log('presentationsId: '+presentationId);
-      purchase(presentationId, reservedSeatsString, reservationData);
-
+      purchase(presentationIdOnSubmit, reservedSeatsString, reservationDataOnSubmit,roomsDataOnSubmit, roomIdOnSubmit);
+     
     });
   } else if (urlLink.includes('index_user')) {
     const paginationElement = document.getElementById('pagination');
