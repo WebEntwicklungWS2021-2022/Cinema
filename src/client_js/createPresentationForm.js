@@ -11,7 +11,7 @@ async function fetchAsync(url) {
     return data;
 }
 
-async function onLoad(){
+async function onLoad() {
 
     movieData = await fetchAsync('/api/movies');
     roomData = await fetchAsync('/api/rooms');
@@ -21,9 +21,9 @@ async function onLoad(){
     console.log(roomData.data);
 }
 
-function displayForm(){
+function displayForm() {
 
-    if(document.getElementById('newPresentationForm') == null){
+    if (document.getElementById('newPresentationForm') == null) {
         return;
     }
 
@@ -71,58 +71,66 @@ function displayForm(){
     const submit = document.createElement('button');
     submit.innerText = 'create presentation';
     submit.type = 'button'
-    submit.addEventListener('click', function(){
+    submit.addEventListener('click', function () {
 
-        const currentDate = today.toISOString().slice(0,10);
+        const currentDate = today.toISOString().slice(0, 10);
         const currentTime = today.getHours() + ':' + today.getMinutes()
 
         //YYYY-MM-DD format
-        if(date.value < currentDate){
+        if (date.value < currentDate) {
             alert('invalid date');
         }
-        else if(date.value == currentDate && time.value < currentTime){
+        else if (date.value == currentDate && time.value < currentTime) {
             alert('invalid time');
         }
-        else{
-
-            sendData(time, date, dropdownMovie.value, dropdownRoom.value);  
+        else {
+            sendData(time, date, dropdownMovie.value, dropdownRoom.value);
         }
     });
 
     formContainer.appendChild(submit);
 }
 
-function createH2(string){
+function createH2(string) {
     const h2 = document.createElement('h2');
     h2.appendChild(document.createTextNode(string));
     return h2;
 }
 
-function createLabel(string){
+function createLabel(string) {
     const label = document.createElement('label');
     label.appendChild(document.createTextNode(string));
     return label;
 }
 
-function createTimestamp(date, time){
+function createTimestamp(date, time) {
     const timestamp = date.value + ' ' + time.value;
     return timestamp;
 }
 
 
-async function sendData(time, date, movieId, roomId){
+async function sendData(time, date, movieId, roomId) {
     const timestamp = createTimestamp(date, time);
 
-    const response = await fetch("/api/presentations", {
-        method: 'POST',
+    const data = {
+        timestamp: timestamp,
+        movieId: movieId,
+        roomId: roomId
+    };
+
+    fetch('/api/presentations', {
+        method: 'POST', // or 'PUT'
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: `{
-           "timestamp": ${timestamp} ,
-           "movieId": ,
-           "Quantity": 1,
-          }`,
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            location.replace('/index_admin');
+        })
+        .catch((error) => {
+            console.error(error);
         });
 }
