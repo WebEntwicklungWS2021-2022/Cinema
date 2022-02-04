@@ -126,10 +126,22 @@ server.post('/api/reservation/:presentationId',(req, res, next) =>{
       return;
     }
     res.json({
-      message: 'success',
-      data: data,
-      id: this.lastID
+      data: data
     });
+  });
+});
+
+server.get('/scan', (req, res) => {
+  let data = getBookingData();
+  let stringData = JSON.stringify(data);
+  QRCode.toDataURL(stringData).then(url => {
+      res.send(`
+      <h1>Your Booking has been confirmed</h1>
+      <h2>Please Take a Photo Of The Generated QRCode</h2>
+      <div><img src='${url}'/></div>`
+      );
+  }).catch(err => {
+      console.debug(err);
   });
 });
 

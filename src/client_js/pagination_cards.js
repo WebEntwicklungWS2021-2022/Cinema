@@ -343,6 +343,8 @@ function updateData(items){
             console.log(error);
           }
           updateReservationData(roomsData, room, presentationId);
+          const baseUrl = window.location.origin;
+          window.open(baseUrl+"/scan", "QRCode Booking Confirmation", "height=600,width=400");
         } else {
           alert('Oops Seat(s) just got booked, pick different Seat(s) please');
           updateReservationData(roomsData, room, presentationId);
