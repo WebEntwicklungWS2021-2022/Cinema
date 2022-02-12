@@ -174,8 +174,6 @@ header{
 	justify-content: center;
 }
 
-
-
 .button{
   margin: 0px 5px;
   background: #dde1e7;
@@ -213,21 +211,17 @@ header{
 	display: block; 
 }
 
-
-
-
-
-
 @media screen and (max-width: 529px) {
-	
-
+	.posterImage{
+		display: none;
+	}
 }
 
 // seat designs
 
 #res-container{
 	align-items: center;
-	background-color: #242333;
+	background-color: rgba(10, 10, 10, 0.767);
 	color: white;
 	display: flex;
 	flex-direction: column;
@@ -237,8 +231,8 @@ header{
 }
 
 .posterImage {
-	height: 600px;
-	width: 400px;
+	height: 400px;
+	width: 300px;
 }
 
 .movie-container {
@@ -266,14 +260,12 @@ header{
 
 .seat {
 	background-color: #444451;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	height: 12px;
+	height: 15px;
 	margin: 3px;
 	width: 15px;
 }
 
-@color0: #6feaf6; // Appears 2 times
+@color0: #0ce005; // Appears 2 times
 @color1: #ffffff; // Appears 2 times
 
 
@@ -329,10 +321,9 @@ header{
 }
 .screen {
 	background-color: @color1;
-	box-shadow: 0 3px 10px rgba(255, 255, 255, 0.75);
-	height: 70px;
+	height: 20px;
 	margin: 15px 0;
-	transform: rotateX(-45deg);
+	//transform: rotateX(-45deg);
 	width: 100%;
 }
 p.text {
@@ -351,11 +342,13 @@ p.text {
 .btn {
 	width: 180px;
 	height: 60px;
-	cursor: pointer;
-	background: transparent;
-	border: 1px solid #91C9FF;
-	outline: none;
-	transition: 1s ease-in-out;
+	
+	background: #dde1e7;
+	border-radius: 3px;
+	box-shadow: -3px -3px 7px #ffffff73, 3px 3px 5px rgba(94, 104, 121, 0.288);
+	font-size: 18px;
+
+	display: block; 
 	&:hover {
 		transition: 1s ease-in-out;
 		background: #4F95DA;
@@ -370,7 +363,6 @@ p.text {
 #fname{
 	margin-bottom: 10px!important;
 }
-
 
 
 // style for form "create room"

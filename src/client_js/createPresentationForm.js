@@ -1,5 +1,8 @@
 let movieData = null
 let roomData = null;
+let presentationData = null;
+
+const timeSlots = ['10:00', '12:30', '15:00', '18:30', '21:30', '23:00']
 
 let today = new Date();
 
@@ -15,10 +18,12 @@ async function onLoad() {
 
     movieData = await fetchAsync('/api/movies');
     roomData = await fetchAsync('/api/rooms');
+    presentationData = await fetchAsync('/api/presentations')
     displayForm();
     console.log(today);
     console.log(movieData.data);
     console.log(roomData.data);
+    console.log(presentationData.data);
 }
 
 function displayForm() {
@@ -28,10 +33,11 @@ function displayForm() {
     }
 
     const formContainer = document.getElementById('newPresentationForm');
-
     formContainer.appendChild(createH2('create new presentation'));
 
-    formContainer.appendChild(createLabel('select a room:'))
+    //room
+
+    formContainer.appendChild(createLabel('select a room:'));
 
     const dropdownRoom = document.createElement('select');
     dropdownRoom.name = 'roomId';
@@ -41,8 +47,9 @@ function displayForm() {
         optionRoom.text = element.name;
         dropdownRoom.appendChild(optionRoom);
     });
-    dropdownRoom.selectedIndex = 0;
     formContainer.appendChild(dropdownRoom);
+
+    //movie
 
     formContainer.appendChild(createLabel('select a movie:'))
 
@@ -56,17 +63,30 @@ function displayForm() {
     });
     formContainer.appendChild(dropdownMovie);
 
-    formContainer.appendChild(createLabel('select time and date:'))
+    //date
+
+    formContainer.appendChild(createLabel('select a date:'));
 
     const date = document.createElement('input');
     date.type = 'date';
     date.setAttribute('min', today);
+    date.value = today.toISOString().slice(0, 10);
     formContainer.appendChild(date);
 
-    const time = document.createElement('input');
-    time.type = 'time';
-    time.setAttribute('min', today.time)
+    //time
+
+    formContainer.appendChild(createLabel('select a timeslot:'));
+
+    const time = document.createElement('select');
+    timeSlots.forEach(element => {
+        const optionTime = document.createElement('option');
+        optionTime.value = element;
+        optionTime.text = element;
+        time.appendChild(optionTime);
+    });
     formContainer.appendChild(time);
+
+    //submit
 
     const submit = document.createElement('button');
     submit.innerText = 'create presentation';
@@ -78,17 +98,43 @@ function displayForm() {
 
         //YYYY-MM-DD format
         if (date.value < currentDate) {
-            alert('invalid date');
+            window.alert('invalid date');
         }
         else if (date.value == currentDate && time.value < currentTime) {
-            alert('invalid time');
+            window.alert('invalid time');
         }
-        else {
+        else if(!checkIfFree(time, date, dropdownMovie)) {
+            window.alert('room is already occupied');
+
+        }else{
+            console.log("wants to send")
             sendData(time, date, dropdownMovie.value, dropdownRoom.value);
-        }
+        }     
     });
 
     formContainer.appendChild(submit);
+}
+
+
+function checkIfFree(time, date, dropdownRoom){
+    presentationData.data.forEach(pres => {
+        if(pres.roomId == dropdownRoom.value){
+            if(pres.timestamp.slice(0,10) == date.value){
+                if(pres.timestamp.slice(11,16) == time.value){
+                    console.log("invalide zeit")
+                    return false;
+                }
+            }
+        }
+
+        console.log(pres.roomId);
+        console.log(dropdownRoom.value);
+        console.log(pres.timestamp.slice(0,10));
+        console.log(date.value);
+        console.log(pres.timestamp.slice(11,16));
+        console.log(time.value);
+
+    });
 }
 
 function createH2(string) {
@@ -134,3 +180,5 @@ async function sendData(time, date, movieId, roomId) {
             console.error(error);
         });
 }
+
+

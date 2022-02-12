@@ -16,19 +16,18 @@ const hostname = 'localhost';
 
 let port = 8080;
 
-var bookingData;
+let bookingData;
 
-function getBookingData(){
+function getBookingData () {
   return this.bookingData;
 }
 
-function setBookingData(bookingData){
+function setBookingData (bookingData) {
   this.bookingData = bookingData;
 }
 
 // Static Files
 server.use(express.static('build'));
-
 
 server.get('/', (request, response) => {
   response.sendFile(path.join(__dirname, './views/selection.html'));
@@ -43,7 +42,7 @@ server.get('/index_admin', (request, response) => {
 });
 
 server.get('/reservation/:id', (request, response) => {
-  response.sendFile(path.join(__dirname, './views/user/reservation.html')); 
+  response.sendFile(path.join(__dirname, './views/user/reservation.html'));
 });
 
 server.get('/create_presentation', (request, response) => {
@@ -101,7 +100,7 @@ server.post('/api/rooms', (req, res, next) => {
   });
 });
 
-server.post('/api/reservation/:presentationId',(req, res, next) =>{
+server.post('/api/reservation/:presentationId', (req, res, next) => {
   const errors = [];
   if (!req.body.presentationId) {
     errors.push('No presentationId specified');
@@ -132,16 +131,16 @@ server.post('/api/reservation/:presentationId',(req, res, next) =>{
 });
 
 server.get('/scan', (req, res) => {
-  let data = getBookingData();
-  let stringData = JSON.stringify(data);
+  const data = getBookingData();
+  const stringData = JSON.stringify(data);
   QRCode.toDataURL(stringData).then(url => {
-      res.send(`
+    res.send(`
       <h1>Your Booking has been confirmed</h1>
       <h2>Please Take a Photo Of The Generated QRCode</h2>
       <div><img src='${url}'/></div>`
-      );
+    );
   }).catch(err => {
-      console.debug(err);
+    console.debug(err);
   });
 });
 
@@ -159,7 +158,7 @@ server.get('/api/rooms', (req, res, next) => {
   });
 });
 
-server.get('/api/movieDetails/:id', (req, res, next) =>{
+server.get('/api/movieDetails/:id', (req, res, next) => {
   const sql = `select movies.name,
                       movies.posterName, 
                       presentations.timestamp, 
@@ -169,11 +168,11 @@ server.get('/api/movieDetails/:id', (req, res, next) =>{
                       from movies join 
                       presentations on movies.movieId = presentations.movieId 
                       where movies.movieId = ?`;
-  let movieId = req.params.id;
+  const movieId = req.params.id;
   console.log(movieId);
   db.all(sql, [movieId], (err, rows) => {
     if (err) {
-      res.status(400).json({error: err.message});
+      res.status(400).json({ error: err.message });
       return;
     }
     res.json({
@@ -182,7 +181,7 @@ server.get('/api/movieDetails/:id', (req, res, next) =>{
   });
 });
 
-server.get('/api/timestamp', (req, res, next) =>{
+server.get('/api/timestamp', (req, res, next) => {
   const sql = 'select timestamp from presentations join movies on presentations.movieId = movies.movieId where movies.name = "13 Hours"';
   const params = [];
   db.all(sql, params, (err, rows) => {
@@ -223,7 +222,7 @@ server.post('/api/reservations', (req, res, next) => {
       return;
     }
     res.json({
-      data: data,
+      data: data
     });
   });
 });
