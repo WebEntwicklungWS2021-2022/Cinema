@@ -103,7 +103,7 @@ function displayForm() {
         else if (date.value == currentDate && time.value < currentTime) {
             window.alert('invalid time');
         }
-        else if(!checkIfFree(time, date, dropdownMovie)) {
+        else if(!checkIfFree(time, date, dropdownRoom)) {
             window.alert('room is already occupied');
 
         }else{
@@ -117,24 +117,35 @@ function displayForm() {
 
 
 function checkIfFree(time, date, dropdownRoom){
-    presentationData.data.forEach(pres => {
-        if(pres.roomId == dropdownRoom.value){
-            if(pres.timestamp.slice(0,10) == date.value){
-                if(pres.timestamp.slice(11,16) == time.value){
-                    console.log("invalide zeit")
-                    return false;
+    
+    let isValid = true;
+
+    if(presentationData.data.length == 0){
+        isValid = true;
+    }
+    else{
+        presentationData.data.forEach(pres => {
+            console.log(pres.roomId);
+            console.log(dropdownRoom.value);
+            console.log(pres.timestamp.slice(0,10));
+            console.log(date.value);
+            console.log(pres.timestamp.slice(11,16));
+            console.log(time.value);
+    
+    
+            if(pres.roomId == dropdownRoom.value){
+                if(pres.timestamp.slice(0,10) == date.value){
+                    if(pres.timestamp.slice(11,16) == time.value){
+                        isValid = false;
+                        console.log("isValid set to false");
+                    }
                 }
             }
-        }
+        });
+    }
 
-        console.log(pres.roomId);
-        console.log(dropdownRoom.value);
-        console.log(pres.timestamp.slice(0,10));
-        console.log(date.value);
-        console.log(pres.timestamp.slice(11,16));
-        console.log(time.value);
-
-    });
+    console.log(isValid);
+    return isValid;
 }
 
 function createH2(string) {

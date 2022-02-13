@@ -120,22 +120,6 @@ header{
 	border-top-left-radius: 15px;
 	border-top-right-radius: 15px;
     background-color: tomato;
-	background: url("pictures/the_room.png");
-	background-size: cover;
-}
-
-.card-image.card2 {
-	background: url("pictures/starwars.png");
-	background-size: cover;
-}
-
-.card-image.card3 {
-	background: url("pictures/two_brothers.png");
-	background-size: cover;
-}
-
-.card-image.card4 {
-	background: url("pictures/sharknado.png");
 	background-size: cover;
 }
 
@@ -211,7 +195,149 @@ header{
 	display: block; 
 }
 
+@media screen and (max-width: 779px) {
+	.card-container{
+		display: flex;
+		gap: 15px;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 15px;
+		
+	}
+	
+	.card{
+		display: grid;
+		grid-template-columns: 110px;
+		grid-template-rows: 150px  40px;
+		grid-template-areas: "image" "title"; 
+		text-align: center;
+		border-radius: 9px;
+		margin-top: 15px;
+		transition: 0.5s ease;
+		position: relative;
+		opacity: 1;
+	}
+	
+	.card-overlay {
+		transition: .5s ease;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		opacity: 0;
+		text-align: center;
+	
+		& .a{
+			text-decoration: none;
+			display:block;
+		}
+	}
+	
+	.card-overlay-text{
+		
+		color: white;
+		font-size: 15px;
+		padding: 8px 16px;
+		opacity: 1;
+		border: 2px solid rgb(134, 15, 11);
+		border-top-left-radius: 7px;
+		border-top-right-radius: 7px;
+		border-bottom-left-radius: 7px;
+		border-bottom-right-radius: 7px;
+	}
+	
+	
+	
+	.card-image{
+		grid-area: "image";
+		border-top-left-radius: 7px;
+		border-top-right-radius: 7px;
+		background-color: tomato;
+		background-size: cover;
+	}
+	
+	
+	.card-title {
+		grid-area: "reservation";
+		display: grid;
+		border-bottom-left-radius: 7px;
+		border-bottom-right-radius: 7px;
+		background: #23262c;
+	
+		& h2{
+			margin: auto 0;
+			color: white;
+			font-size: 12px;
+		}
+	  }
+	
+	.card:hover {
+		transform: scale(1.15);
+		/* transform: rotate3d(1, 1, 0.1, 45deg); */
+		box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.6);
+	
+		& .card-image{
+			filter: brightness(30%);
+		}
+	
+		& .card-overlay{
+			opacity: 1;
+		}
+	}
+	
+	
+	.pagination{
+		display: flex;
+		justify-content: center;
+	}
+	
+	.button{
+	  margin: 0px 5px;
+	  background: #dde1e7;
+	  border-radius: 3px;
+	  box-shadow: -3px -3px 7px #ffffff73, 3px 3px 5px rgba(94, 104, 121, 0.288);
+	  font-size: 18px;
+	  height: 45px;
+	  width: 55px;
+	  display: block; 
+	}
+	
+	.button.active{
+		background-color: gray;
+	}
+	
+	.button-forward{
+		margin: 0px 5px;
+		background: #dde1e7;
+		border-radius: 3px;
+		box-shadow: -3px -3px 7px #ffffff73, 3px 3px 5px rgba(94, 104, 121, 0.288);
+		font-size: 18px;
+		height: 45px;
+		width: 100px;
+		display: block; 
+	}
+	
+	.button-back{
+		margin: 0px 5px;
+		background: #dde1e7;
+		border-radius: 3px;
+		box-shadow: -3px -3px 7px #ffffff73, 3px 3px 5px rgba(94, 104, 121, 0.288);
+		font-size: 18px;
+		height: 45px;
+		width: 100px;
+		display: block; 
+	}
+}
+
+
 @media screen and (max-width: 529px) {
+	.posterImage{
+		display: none;
+	}
+}
+
+@media screen and (max-height: 880px) {
 	.posterImage{
 		display: none;
 	}
@@ -231,8 +357,9 @@ header{
 }
 
 .posterImage {
-	height: 400px;
-	width: 300px;
+	margin-top: 10px;
+	height: 250px;
+	width: 200px;
 }
 
 .movie-container {

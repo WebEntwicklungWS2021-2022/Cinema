@@ -402,14 +402,28 @@ async function updateReservationData (roomsData, room, presentationId) {
 
 /* Christoph's Code */
 let currentPage = 0;
-const cardWidth = 250;
-const cardHeigth = 400;
+const cardWidthFull = 250;
+const cardHeigthFull = 400;
+
+const cardWidthHalf = 125;
+const cardHeigthHalf = 200;
 
 function calcMaxCards () {
-  const maxCardsPerRow = Math.floor((window.innerWidth - 30) / (cardWidth));
-  const maxCardsPerCol = Math.floor(((window.innerHeight - 160) / cardHeigth));
-  const maxCardsPerPage = maxCardsPerCol * maxCardsPerRow;
-  return Math.max(maxCardsPerPage, 1);
+
+  if(window.innerWidth > 780){
+    const maxCardsPerRow = Math.floor((window.innerWidth - 30) / (cardWidthFull));
+    const maxCardsPerCol = Math.floor(((window.innerHeight - 160) / cardHeigthFull));
+    const maxCardsPerPage = maxCardsPerCol * maxCardsPerRow;
+    return Math.max(maxCardsPerPage, 1);
+  }
+  else{
+    const maxCardsPerRow = Math.floor((window.innerWidth - 30) / (cardWidthHalf));
+    const maxCardsPerCol = Math.floor(((window.innerHeight - 160) / cardHeigthHalf));
+    const maxCardsPerPage = maxCardsPerCol * maxCardsPerRow;
+    console.log(maxCardsPerPage);
+    return Math.max(maxCardsPerPage, 1);
+  }
+
 }
 
 function displayCards (items, wrapper, cardsPerPage) {
